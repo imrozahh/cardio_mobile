@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import '../../presentation/auth/screens/login_screen.dart';
 import '../../presentation/auth/screens/register_screen.dart';
 import '../../presentation/auth/screens/forgot_password_screen.dart';
+import '../../presentation/auth/screens/otp_verification_screen.dart';
+import '../../presentation/auth/screens/change_password_screen.dart';
 import '../../presentation/dashboard/screens/dashboard_screen.dart';
 import '../../presentation/prediction/screens/prediction_screen.dart';
 import '../../presentation/prediction/screens/prediction_result_screen.dart';
@@ -19,6 +21,8 @@ class AppRoutes {
   static const String login = '/login';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
+  static const String otpVerification = '/otp-verification';
+  static const String changePassword = '/change-password';
   static const String dashboard = '/dashboard';
   static const String prediction = '/prediction';
   static const String predictionResult = '/prediction/result';
@@ -47,6 +51,16 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.forgotPassword,
       name: 'forgot-password',
       builder: (context, state) => const ForgotPasswordScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.otpVerification,
+      name: 'otp-verification',
+      builder: (context, state) => const OtpVerificationScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.changePassword,
+      name: 'change-password',
+      builder: (context, state) => const ChangePasswordScreen(),
     ),
     GoRoute(
       path: AppRoutes.dashboard,
@@ -78,9 +92,8 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.articleDetail,
       name: 'article-detail',
-      builder: (context, state) => ArticleDetailScreen(
-        articleId: state.pathParameters['id']!,
-      ),
+      builder: (context, state) =>
+          ArticleDetailScreen(articleId: state.pathParameters['id']!),
     ),
     GoRoute(
       path: AppRoutes.profile,
