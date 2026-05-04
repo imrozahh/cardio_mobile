@@ -30,3 +30,25 @@ class AuthFailure extends AuthState {
   @override
   List<Object?> get props => [message];
 }
+
+class AuthSuccess extends AuthState {
+  final String message;
+
+  const AuthSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class ForgotPasswordSent extends AuthState {
+  final String email;
+
+  const ForgotPasswordSent(this.email);
+
+  @override
+  List<Object?> get props => [email];
+}
+
+class OtpVerified extends AuthState {
+  const OtpVerified();
+}

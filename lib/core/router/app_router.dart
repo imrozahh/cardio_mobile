@@ -55,7 +55,8 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.otpVerification,
       name: 'otp-verification',
-      builder: (context, state) => const OtpVerificationScreen(),
+      builder: (context, state) =>
+          OtpVerificationScreen(email: state.extra as String? ?? ''),
     ),
     GoRoute(
       path: AppRoutes.changePassword,

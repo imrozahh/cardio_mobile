@@ -13,6 +13,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthCheckRequested>(_onAuthCheckRequested);
     on<LoginRequested>(_onLoginRequested);
     on<LogoutRequested>(_onLogoutRequested);
+    on<RegisterRequested>(_onRegisterRequested);
+    on<ForgotPasswordRequested>(_onForgotPasswordRequested);
+    on<OtpVerificationRequested>(_onOtpVerificationRequested);
   }
 
   Future<void> _onAuthCheckRequested(
@@ -44,6 +47,53 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthFailure(failure.message)),
       (user) => emit(Authenticated(user)),
+    );
+  }
+
+  Future<void> _onRegisterRequested(
+    RegisterRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final result = await authRepository.register(
+      name: event.name,
+      email: event.email,
+      password: event.password,
+      passwordConfirmation: event.passwordConfirmation,
+    );
+
+    result.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (user) => emit(Authenticated(user)),
+    );
+  }
+
+  Future<void> _onForgotPasswordRequested(
+    ForgotPasswordRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final result = await authRepository.forgotPassword(event.email);
+
+    result.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (_) => emit(ForgotPasswordSent(event.email)),
+    );
+  }
+
+  Future<void> _onOtpVerificationRequested(
+    OtpVerificationRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final result = await authRepository.verifyOtp(
+      email: event.email,
+      otp: event.otp,
+    );
+
+    result.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (_) => emit(const OtpVerified()),
     );
   }
 

@@ -154,17 +154,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ? null
                             : () {
                                 if (_formKey.currentState!.validate()) {
-                                  // TODO: Add register event to AuthBloc
-                                  // context.read<AuthBloc>().add(
-                                  //   RegisterRequested(
-                                  //     name: _nameController.text.trim(),
-                                  //     email: _emailController.text.trim(),
-                                  //     password: _passwordController.text,
-                                  //   ),
-                                  // );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Register berhasil!'),
+                                  context.read<AuthBloc>().add(
+                                    RegisterRequested(
+                                      name: _nameController.text.trim(),
+                                      email: _emailController.text.trim(),
+                                      password: _passwordController.text,
+                                      passwordConfirmation:
+                                          _confirmPasswordController.text,
                                     ),
                                   );
                                 }
