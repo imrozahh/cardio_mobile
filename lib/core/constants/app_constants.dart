@@ -2,7 +2,7 @@ class AppConstants {
   AppConstants._();
 
   // ── API ──────────────────────────────────────────────────────────────────
-  static const String baseUrl = 'http://10.10.181.112:8000/api';
+  static const String baseUrl = 'http://localhost:8000/api';
   // static const String baseUrl = 'http://localhost:8000/api'; // iOS simulator
   // static const String baseUrl = 'https://your-domain.com/api'; // Production
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../presentation/auth/screens/login_screen.dart';
-import '../../presentation/auth/screens/register_screen.dart';
-import '../../presentation/auth/screens/forgot_password_screen.dart';
+import '../../presentation/auth/screens/login_page.dart';
+import '../../presentation/auth/screens/register_page.dart';
+import '../../presentation/auth/screens/forgot_password_page.dart';
 import '../../presentation/auth/screens/otp_verification_screen.dart';
 import '../../presentation/auth/screens/change_password_screen.dart';
 import '../../presentation/dashboard/screens/dashboard_screen.dart';
@@ -40,17 +40,17 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.login,
       name: 'login',
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => const LoginPage(),
     ),
     GoRoute(
       path: AppRoutes.register,
       name: 'register',
-      builder: (context, state) => const RegisterScreen(),
+      builder: (context, state) => const RegisterPage(),
     ),
     GoRoute(
       path: AppRoutes.forgotPassword,
       name: 'forgot-password',
-      builder: (context, state) => const ForgotPasswordScreen(),
+      builder: (context, state) => const ForgotPasswordPage(),
     ),
     GoRoute(
       path: AppRoutes.otpVerification,

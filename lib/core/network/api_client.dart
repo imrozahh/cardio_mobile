@@ -12,8 +12,12 @@ class ApiClient {
     _dio = Dio(
       BaseOptions(
         baseUrl: AppConstants.baseUrl,
-        connectTimeout: Duration(milliseconds: AppConstants.connectTimeout),
-        receiveTimeout: Duration(milliseconds: AppConstants.receiveTimeout),
+        connectTimeout: const Duration(
+          milliseconds: AppConstants.connectTimeout,
+        ),
+        receiveTimeout: const Duration(
+          milliseconds: AppConstants.receiveTimeout,
+        ),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -22,10 +26,9 @@ class ApiClient {
     );
 
     _dio.interceptors.add(_AuthInterceptor(_storage, _dio));
-    _dio.interceptors.add(LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-    ));
+    _dio.interceptors.add(
+      LogInterceptor(requestBody: true, responseBody: true),
+    );
   }
 
   Future<Response> get(String path, {Map<String, dynamic>? queryParams}) async {
@@ -75,7 +78,10 @@ class ApiClient {
           final errors = (data['errors'] as Map<String, dynamic>?)?.map(
             (k, v) => MapEntry(k, List<String>.from(v)),
           );
-          return ValidationException(data['message'] ?? 'Validasi gagal', errors: errors);
+          return ValidationException(
+            data['message'] ?? 'Validasi gagal',
+            errors: errors,
+          );
         }
         return ServerException(
           data?['message'] ?? 'Terjadi kesalahan server.',
@@ -95,7 +101,10 @@ class _AuthInterceptor extends Interceptor {
   _AuthInterceptor(this._storage, this._dio);
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final token = await _storage.read(key: AppConstants.tokenKey);
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
@@ -107,7 +116,9 @@ class _AuthInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
       // Try refresh token
-      final refreshToken = await _storage.read(key: AppConstants.refreshTokenKey);
+      final refreshToken = await _storage.read(
+        key: AppConstants.refreshTokenKey,
+      );
       if (refreshToken != null) {
         try {
           final response = await _dio.post(
