@@ -76,9 +76,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.predictionResult,
       name: 'prediction-result',
-      builder: (context, state) => PredictionResultScreen(
-        result: state.extra as Map<String, dynamic>? ?? {},
-      ),
+      builder: (context, state) => const PredictionResultScreen(),
     ),
     GoRoute(
       path: AppRoutes.history,

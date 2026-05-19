@@ -5,8 +5,7 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color primaryGreen =
-        const Color(0xFF0AA06E);
+    const Color primaryGreen = Color(0xFF0AA06E);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -28,8 +27,7 @@ class DashboardPage extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: primaryGreen,
-                        borderRadius:
-                            BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(
                         Icons.favorite,
@@ -53,18 +51,14 @@ class DashboardPage extends StatelessWidget {
                     // LOGIN BUTTON
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/login',
-                        );
+                        Navigator.pushNamed(context, '/login');
                       },
 
                       child: Text(
                         "Masuk",
                         style: TextStyle(
                           color: primaryGreen,
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -73,25 +67,16 @@ class DashboardPage extends StatelessWidget {
 
                     // REGISTER BUTTON
                     ElevatedButton(
-                      style:
-                          ElevatedButton.styleFrom(
-                        backgroundColor:
-                            primaryGreen,
-                        foregroundColor:
-                            Colors.white,
-                        shape:
-                            RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(
-                                  12),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryGreen,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
 
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/register',
-                        );
+                        Navigator.pushNamed(context, '/register');
                       },
 
                       child: const Text("Daftar"),
@@ -106,39 +91,32 @@ class DashboardPage extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: primaryGreen,
-                  borderRadius:
-                      const BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30),
                   ),
                 ),
 
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 10),
 
                     Container(
-                      padding:
-                          const EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color:
-                            Colors.white.withOpacity(
-                                0.15),
-                        borderRadius:
-                            BorderRadius.circular(30),
+                        color: Colors.white.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       child: const Text(
                         "PREDIKSI RISIKO PENYAKIT JANTUNG",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 11,
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                           letterSpacing: 1,
                         ),
                       ),
@@ -177,33 +155,23 @@ class DashboardPage extends StatelessWidget {
                       height: 55,
 
                       child: ElevatedButton(
-                        style:
-                            ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors.white,
-                          foregroundColor:
-                              primaryGreen,
-                          shape:
-                              RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(
-                                    16),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: primaryGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
 
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/login',
-                          );
+                          Navigator.pushNamed(context, '/login');
                         },
 
                         child: const Text(
                           "Mulai Cek Kesehatan",
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight:
-                                FontWeight.bold,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -217,35 +185,23 @@ class DashboardPage extends StatelessWidget {
                       height: 55,
 
                       child: OutlinedButton(
-                        style:
-                            OutlinedButton.styleFrom(
-                          foregroundColor:
-                              Colors.white,
-                          side: const BorderSide(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                          shape:
-                              RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(
-                                    16),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.white, width: 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
 
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/register',
-                          );
+                          Navigator.pushNamed(context, '/register');
                         },
 
                         child: const Text(
                           "Daftar Sekarang",
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight:
-                                FontWeight.bold,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -255,8 +211,7 @@ class DashboardPage extends StatelessWidget {
 
                     // IMAGE
                     ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(24),
                       child: Image.network(
                         "https://images.unsplash.com/photo-1584515933487-779824d29309",
                         height: 230,
@@ -272,22 +227,16 @@ class DashboardPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20),
                       ),
 
                       child: Row(
                         children: [
                           Container(
-                            padding:
-                                const EdgeInsets.all(
-                                    12),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: primaryGreen
-                                  .withOpacity(0.1),
-                              borderRadius:
-                                  BorderRadius
-                                      .circular(14),
+                              color: primaryGreen.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(14),
                             ),
                             child: Icon(
                               Icons.shield_outlined,
@@ -299,17 +248,11 @@ class DashboardPage extends StatelessWidget {
 
                           const Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment
-                                      .start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "Teknologi Terverifikasi",
-                                  style: TextStyle(
-                                    fontWeight:
-                                        FontWeight
-                                            .bold,
-                                  ),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
 
                                 SizedBox(height: 4),
@@ -317,8 +260,7 @@ class DashboardPage extends StatelessWidget {
                                 Text(
                                   "Didukung keputusan klinis digital.",
                                   style: TextStyle(
-                                    color:
-                                        Colors.grey,
+                                    color: Colors.grey,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -336,14 +278,10 @@ class DashboardPage extends StatelessWidget {
 
               // FOCUS SECTION
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 20,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
 
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       "Fokus Kami Untuk\nKesehatan Anda",
@@ -357,8 +295,7 @@ class DashboardPage extends StatelessWidget {
 
                     GridView.count(
                       shrinkWrap: true,
-                      physics:
-                          const NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       crossAxisCount: 2,
                       mainAxisSpacing: 14,
                       crossAxisSpacing: 14,
@@ -398,10 +335,7 @@ class DashboardPage extends StatelessWidget {
 
               // FEATURES
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 20,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
 
                 child: Column(
                   children: [
@@ -420,10 +354,7 @@ class DashboardPage extends StatelessWidget {
                       "Platform prediksi risiko jantung "
                       "berbasis AI dengan fitur lengkap.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        height: 1.6,
-                      ),
+                      style: TextStyle(color: Colors.grey, height: 1.6),
                     ),
 
                     const SizedBox(height: 25),
@@ -432,7 +363,7 @@ class DashboardPage extends StatelessWidget {
                       Icons.psychology,
                       "Prediksi AI Akurat",
                       "Algoritma machine learning terlatih dengan ribuan"
-                      "data medis untuk hasil prediksi yang presisi",
+                          "data medis untuk hasil prediksi yang presisi",
                       primaryGreen,
                     ),
 
@@ -440,7 +371,7 @@ class DashboardPage extends StatelessWidget {
                       Icons.chat_bubble_outline,
                       "Konsultasi AI 24/7",
                       "Tanyakan apapun seputar kesehatan jantung anda"
-                      "kepada chatbot AI yang responsif.",
+                          "kepada chatbot AI yang responsif.",
                       primaryGreen,
                     ),
 
@@ -448,7 +379,7 @@ class DashboardPage extends StatelessWidget {
                       Icons.history,
                       "Riwayat Lengkap",
                       "Simpan data pantau semua hasil prediksi dan"
-                      "konsultasi anda dalam satu dashboard.",
+                          "konsultasi anda dalam satu dashboard.",
                       primaryGreen,
                     ),
 
@@ -456,7 +387,7 @@ class DashboardPage extends StatelessWidget {
                       Icons.lock_outline,
                       "Data Aman & Privat",
                       "Semua data kesehatan anda terenkripsi"
-                      "dan dijamin kerahasiaannya.",
+                          "dan dijamin kerahasiaannya.",
                       primaryGreen,
                     ),
 
@@ -464,7 +395,7 @@ class DashboardPage extends StatelessWidget {
                       Icons.book_outlined,
                       "Artikel Kesehatan",
                       "Akses ratusan artikel tentang kesehatan jantung"
-                      "yang ditulis oleh ahli kesehatan.",
+                          "yang ditulis oleh ahli kesehatan.",
                       primaryGreen,
                     ),
 
@@ -472,7 +403,7 @@ class DashboardPage extends StatelessWidget {
                       Icons.monitor_heart,
                       "Rekomendasi Personal",
                       "Dapatkan saran gaya hidup sehat yang disesuaikan"
-                      "dengan kondisi medis anda.",
+                          "dengan kondisi medis anda.",
                       primaryGreen,
                     ),
                   ],
@@ -524,36 +455,30 @@ class DashboardPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 35),
-              
+
               // HEALTH ARTICLES
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  ),
-                  child: Column(
-                    crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Artikel Kesehatan\nTerbaru",
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Artikel Kesehatan\nTerbaru",
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
 
-                  const SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                  const Text(
-                    "Artikel kesehatan akan tampil "
-                    "di sini.",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    height: 1.6,
-                  ),
-                ),
+                    const Text(
+                      "Artikel kesehatan akan tampil "
+                      "di sini.",
+                      style: TextStyle(color: Colors.grey, height: 1.6),
+                    ),
 
-                  const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
                     Container(
                       width: double.infinity,
@@ -564,8 +489,7 @@ class DashboardPage extends StatelessWidget {
 
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(24),
                       ),
 
                       child: Column(
@@ -573,8 +497,7 @@ class DashboardPage extends StatelessWidget {
                           Icon(
                             Icons.article_outlined,
                             size: 70,
-                            color:
-                                primaryGreen.withOpacity(0.5),
+                            color: primaryGreen.withOpacity(0.5),
                           ),
 
                           const SizedBox(height: 20),
@@ -592,10 +515,7 @@ class DashboardPage extends StatelessWidget {
                           const Text(
                             "Artikel kesehatan terbaru\nakan muncul di sini.",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              height: 1.6,
-                            ),
+                            style: TextStyle(color: Colors.grey, height: 1.6),
                           ),
                         ],
                       ),
@@ -614,8 +534,7 @@ class DashboardPage extends StatelessWidget {
 
                 decoration: BoxDecoration(
                   color: primaryGreen,
-                  borderRadius:
-                      BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(30),
                 ),
 
                 child: Column(
@@ -636,10 +555,7 @@ class DashboardPage extends StatelessWidget {
                       "Bergabunglah dengan ribuan pengguna "
                       "HeartCare sekarang juga.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        height: 1.6,
-                      ),
+                      style: TextStyle(color: Colors.white70, height: 1.6),
                     ),
 
                     const SizedBox(height: 25),
@@ -649,33 +565,23 @@ class DashboardPage extends StatelessWidget {
                       height: 55,
 
                       child: ElevatedButton(
-                        style:
-                            ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors.white,
-                          foregroundColor:
-                              primaryGreen,
-                          shape:
-                              RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(
-                                    16),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: primaryGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
 
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/register',
-                          );
+                          Navigator.pushNamed(context, '/register');
                         },
 
                         child: const Text(
                           "Daftar Sekarang",
                           style: TextStyle(
                             fontSize: 17,
-                            fontWeight:
-                                FontWeight.bold,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -692,47 +598,33 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget focusCard(
-    IconData icon,
-    String title,
-    Color color,
-  ) {
+  Widget focusCard(IconData icon, String title, Color color) {
     return Container(
       padding: const EdgeInsets.all(18),
 
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(22),
       ),
 
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-        mainAxisAlignment:
-            MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius:
-                  BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(
-              icon,
-              color: color,
-            ),
+            child: Icon(icon, color: color),
           ),
 
           const SizedBox(height: 16),
 
           Text(
             title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
         ],
       ),
@@ -751,33 +643,26 @@ class DashboardPage extends StatelessWidget {
 
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(24),
       ),
 
       child: Row(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius:
-                  BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(
-              icon,
-              color: color,
-            ),
+            child: Icon(icon, color: color),
           ),
 
           const SizedBox(width: 16),
 
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -791,10 +676,7 @@ class DashboardPage extends StatelessWidget {
 
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    height: 1.6,
-                  ),
+                  style: const TextStyle(color: Colors.grey, height: 1.6),
                 ),
               ],
             ),
@@ -804,12 +686,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget stepItem(
-    String number,
-    String title,
-    String subtitle,
-    Color color,
-  ) {
+  Widget stepItem(String number, String title, String subtitle, Color color) {
     return Container(
       margin: const EdgeInsets.only(bottom: 26),
 
@@ -832,10 +709,7 @@ class DashboardPage extends StatelessWidget {
 
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 8),
@@ -843,10 +717,7 @@ class DashboardPage extends StatelessWidget {
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.grey,
-              height: 1.6,
-            ),
+            style: const TextStyle(color: Colors.grey, height: 1.6),
           ),
         ],
       ),
