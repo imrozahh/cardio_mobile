@@ -4,38 +4,27 @@ class PredictionScreen extends StatefulWidget {
   const PredictionScreen({super.key});
 
   @override
-  State<PredictionPage> createState() =>
-      _PredictionPageState();
+  State<PredictionScreen> createState() => _PredictionScreenState();
 }
 
-class _PredictionPageState
-    extends State<PredictionPage> {
-  final Color primaryGreen =
-      const Color(0xFF0AA06E);
+class _PredictionScreenState extends State<PredictionScreen> {
+  final Color primaryGreen = const Color(0xFF0AA06E);
 
-  final TextEditingController usiaController =
-      TextEditingController();
+  final TextEditingController usiaController = TextEditingController();
 
-  final TextEditingController sistolikController =
-      TextEditingController();
+  final TextEditingController sistolikController = TextEditingController();
 
-  final TextEditingController diastolikController =
-      TextEditingController();
+  final TextEditingController diastolikController = TextEditingController();
 
-  final TextEditingController kolesterolController =
-      TextEditingController();
+  final TextEditingController kolesterolController = TextEditingController();
 
-  final TextEditingController gulaController =
-      TextEditingController();
+  final TextEditingController gulaController = TextEditingController();
 
-  final TextEditingController detakController =
-      TextEditingController();
+  final TextEditingController detakController = TextEditingController();
 
-  final TextEditingController beratController =
-      TextEditingController();
+  final TextEditingController beratController = TextEditingController();
 
-  final TextEditingController tinggiController =
-      TextEditingController();
+  final TextEditingController tinggiController = TextEditingController();
 
   String gender = "";
 
@@ -50,43 +39,32 @@ class _PredictionPageState
         centerTitle: false,
         title: const Text(
           "Cek Kesehatan",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        iconTheme:
-            const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
 
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 "Cek Kesehatan Jantung",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 8),
 
               const Text(
                 "Lengkapi data kesehatan Anda untuk mendapatkan prediksi AI.",
-                style: TextStyle(
-                  color: Colors.grey,
-                  height: 1.5,
-                ),
+                style: TextStyle(color: Colors.grey, height: 1.5),
               ),
 
               const SizedBox(height: 24),
 
-              //  DEMOGRAFI 
+              //  DEMOGRAFI
               sectionCard(
                 icon: Icons.person_outline,
                 color: Colors.green,
@@ -103,34 +81,22 @@ class _PredictionPageState
                     const SizedBox(height: 20),
 
                     Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
                           "Jenis Kelamin",
-                          style: TextStyle(
-                            fontWeight:
-                                FontWeight.w600,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.w600),
                         ),
 
                         const SizedBox(height: 10),
 
                         Row(
                           children: [
-                            Expanded(
-                              child: genderButton(
-                                "Laki-laki",
-                              ),
-                            ),
+                            Expanded(child: genderButton("Laki-laki")),
 
                             const SizedBox(width: 12),
 
-                            Expanded(
-                              child: genderButton(
-                                "Perempuan",
-                              ),
-                            ),
+                            Expanded(child: genderButton("Perempuan")),
                           ],
                         ),
                       ],
@@ -141,10 +107,9 @@ class _PredictionPageState
 
               const SizedBox(height: 20),
 
-              //  DATA VITAL 
+              //  DATA VITAL
               sectionCard(
-                icon:
-                    Icons.monitor_heart_outlined,
+                icon: Icons.monitor_heart_outlined,
                 color: Colors.purple,
                 title: "Data Vital",
                 child: Column(
@@ -215,7 +180,7 @@ class _PredictionPageState
 
               const SizedBox(height: 30),
 
-              //  BUTTON 
+              //  BUTTON
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -223,30 +188,21 @@ class _PredictionPageState
                     backgroundColor: primaryGreen,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    padding:
-                        const EdgeInsets.symmetric(
-                      vertical: 18,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 18),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(18),
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/prediction-result',
-                    );
+                    Navigator.pushNamed(context, '/prediction-result');
                   },
                   child: const Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         "Mulai Analisis AI",
                         style: TextStyle(
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
@@ -267,7 +223,7 @@ class _PredictionPageState
     );
   }
 
-  //  CARD 
+  //  CARD
   Widget sectionCard({
     required IconData icon,
     required Color color,
@@ -281,8 +237,7 @@ class _PredictionPageState
         borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -291,13 +246,9 @@ class _PredictionPageState
                 height: 46,
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
-                  borderRadius:
-                      BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                ),
+                child: Icon(icon, color: color),
               ),
 
               const SizedBox(width: 14),
@@ -320,7 +271,7 @@ class _PredictionPageState
     );
   }
 
-  //  INPUT 
+  //  INPUT
   Widget buildInput(
     String title,
     String hint,
@@ -328,15 +279,9 @@ class _PredictionPageState
     IconData icon,
   ) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
 
         const SizedBox(height: 10),
 
@@ -348,8 +293,7 @@ class _PredictionPageState
             filled: true,
             fillColor: const Color(0xFFF8FAFC),
             border: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,
             ),
           ),
@@ -358,7 +302,7 @@ class _PredictionPageState
     );
   }
 
-  //  GENDER BUTTON 
+  //  GENDER BUTTON
   Widget genderButton(String text) {
     bool isSelected = gender == text;
 
@@ -370,24 +314,17 @@ class _PredictionPageState
       },
 
       child: AnimatedContainer(
-        duration: const Duration(
-          milliseconds: 200,
-        ),
+        duration: const Duration(milliseconds: 200),
 
         height: 55,
 
         decoration: BoxDecoration(
-          color: isSelected
-              ? primaryGreen
-              : const Color(0xFFF8FAFC),
+          color: isSelected ? primaryGreen : const Color(0xFFF8FAFC),
 
-          borderRadius:
-              BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16),
 
           border: Border.all(
-            color: isSelected
-                ? primaryGreen
-                : Colors.grey.shade300,
+            color: isSelected ? primaryGreen : Colors.grey.shade300,
           ),
         ),
 
@@ -396,9 +333,7 @@ class _PredictionPageState
             text,
 
             style: TextStyle(
-              color: isSelected
-                  ? Colors.white
-                  : Colors.black87,
+              color: isSelected ? Colors.white : Colors.black87,
 
               fontWeight: FontWeight.w600,
             ),

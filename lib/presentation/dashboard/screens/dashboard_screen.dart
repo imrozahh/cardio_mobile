@@ -11,16 +11,13 @@ class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() =>
-      _DashboardScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState
-    extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen> {
   final Dio dio = Dio();
 
-  final FlutterSecureStorage storage =
-      const FlutterSecureStorage();
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   int totalPrediksi = 0;
 
@@ -28,12 +25,10 @@ class _DashboardScreenState
 
   String lastCheckDate = "-";
 
-  //  FETCH DATA 
+  //  FETCH DATA
   Future<void> fetchDashboardData() async {
     try {
-      final token = await storage.read(
-        key: AppConstants.tokenKey,
-      );
+      final token = await storage.read(key: AppConstants.tokenKey);
 
       final response = await dio.get(
         'http://127.0.0.1:8000/api/user/dashboard',
@@ -52,15 +47,12 @@ class _DashboardScreenState
       final predictions = data['predictions'];
 
       setState(() {
-        totalPrediksi =
-            stats['total_checkups'] ?? 0;
+        totalPrediksi = stats['total_checkups'] ?? 0;
 
         if (predictions.isNotEmpty) {
-          statusRisiko =
-              predictions[0]['result_level'];
+          statusRisiko = predictions[0]['result_level'];
 
-          lastCheckDate =
-              predictions[0]['created_at'];
+          lastCheckDate = predictions[0]['created_at'];
         }
       });
     } catch (e) {
@@ -79,11 +71,9 @@ class _DashboardScreenState
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryGreen =
-        Color(0xFF0AA06E);
+    const Color primaryGreen = Color(0xFF0AA06E);
 
-    final authState =
-        context.watch<AuthBloc>().state;
+    final authState = context.watch<AuthBloc>().state;
 
     String userName = "User";
 
@@ -97,18 +87,15 @@ class _DashboardScreenState
     ).format(DateTime.now());
 
     return Scaffold(
-      backgroundColor:
-          const Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFF8FAFC),
 
-      //  DRAWER 
+      //  DRAWER
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(
-                color: primaryGreen,
-              ),
+              decoration: const BoxDecoration(color: primaryGreen),
               child: const Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
@@ -116,109 +103,59 @@ class _DashboardScreenState
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 26,
-                    fontWeight:
-                        FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
 
-            drawerItem(
-              Icons.dashboard,
-              "Dashboard",
-              () {
-                Navigator.pop(context);
-              },
-            ),
+            drawerItem(Icons.dashboard, "Dashboard", () {
+              Navigator.pop(context);
+            }),
 
-            drawerItem(
-              Icons.monitor_heart_outlined,
-              "Cek Kesehatan",
-              () {
-                Navigator.pushNamed(
-                  context,
-                  '/prediction',
-                );
-              },
-            ),
+            drawerItem(Icons.monitor_heart_outlined, "Cek Kesehatan", () {
+              Navigator.pushNamed(context, '/prediction');
+            }),
 
-            drawerItem(
-              Icons.favorite_border,
-              "Hasil Terakhir",
-              () {
-                Navigator.pushNamed(
-                  context,
-                  '/prediction-result',
-                );
-              },
-            ),
+            drawerItem(Icons.favorite_border, "Hasil Terakhir", () {
+              Navigator.pushNamed(context, '/prediction-result');
+            }),
 
-            drawerItem(
-              Icons.history,
-              "Riwayat Prediksi",
-              () {
-                Navigator.pushNamed(
-                  context,
-                  '/history',
-                );
-              },
-            ),
+            drawerItem(Icons.history, "Riwayat Prediksi", () {
+              Navigator.pushNamed(context, '/history');
+            }),
 
-            drawerItem(
-              Icons.chat_bubble_outline,
-              "Konsultasi AI",
-              () {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      "Halaman Konsultasi AI belum dibuat",
-                    ),
-                  ),
-                );
-              },
-            ),
+            drawerItem(Icons.chat_bubble_outline, "Konsultasi AI", () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Halaman Konsultasi AI belum dibuat"),
+                ),
+              );
+            }),
 
-            drawerItem(
-              Icons.person_outline,
-              "Profil",
-              () {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      "Halaman Profil belum dibuat",
-                    ),
-                  ),
-                );
-              },
-            ),
+            drawerItem(Icons.person_outline, "Profil", () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Halaman Profil belum dibuat")),
+              );
+            }),
 
-            drawerItem(
-              Icons.logout,
-              "Logout",
-              () {
-                Navigator.pushNamed(
-                  context,
-                  '/login',
-                );
-              },
-            ),
+            drawerItem(Icons.logout, "Logout", () {
+              Navigator.pushNamed(context, '/login');
+            }),
           ],
         ),
       ),
 
-      //  BODY 
+      //  BODY
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              //  HEADER 
+              //  HEADER
               Builder(
                 builder: (context) {
                   return Container(
-                    padding:
-                        const EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 14,
                     ),
@@ -228,129 +165,80 @@ class _DashboardScreenState
                       children: [
                         IconButton(
                           onPressed: () {
-                            Scaffold.of(context)
-                                .openDrawer();
+                            Scaffold.of(context).openDrawer();
                           },
-                          icon: const Icon(
-                            Icons.menu,
-                            color: primaryGreen,
-                          ),
+                          icon: const Icon(Icons.menu, color: primaryGreen),
                         ),
 
                         const SizedBox(width: 6),
 
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment
-                                    .start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "Halo, $userName",
-                                overflow:
-                                    TextOverflow
-                                        .ellipsis,
-                                style:
-                                    const TextStyle(
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
                                   fontSize: 16,
-                                  fontWeight:
-                                      FontWeight
-                                          .bold,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
 
-                              const SizedBox(
-                                  height: 2),
+                              const SizedBox(height: 2),
 
                               Text(
                                 currentDate,
-                                style:
-                                    const TextStyle(
+                                style: const TextStyle(
                                   fontSize: 10,
-                                  color:
-                                      Colors.grey,
+                                  color: Colors.grey,
                                 ),
                               ),
                             ],
                           ),
                         ),
 
-                        //  PROFILE 
+                        //  PROFILE
                         Container(
-                          padding:
-                              const EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 8,
                             vertical: 6,
                           ),
 
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius:
-                                BorderRadius
-                                    .circular(
-                                        14),
-                            border: Border.all(
-                              color: Colors
-                                  .grey.shade200,
-                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: Colors.grey.shade200),
                           ),
 
                           child: Row(
                             children: [
                               CircleAvatar(
                                 radius: 14,
-                                backgroundColor:
-                                    primaryGreen
-                                        .withOpacity(
-                                            0.1),
+                                backgroundColor: primaryGreen.withOpacity(0.1),
 
                                 child: Text(
-                                  userName
-                                          .isNotEmpty
-                                      ? userName[
-                                              0]
-                                          .toUpperCase()
+                                  userName.isNotEmpty
+                                      ? userName[0].toUpperCase()
                                       : "U",
-                                  style:
-                                      const TextStyle(
-                                    color:
-                                        primaryGreen,
-                                    fontWeight:
-                                        FontWeight
-                                            .bold,
+                                  style: const TextStyle(
+                                    color: primaryGreen,
+                                    fontWeight: FontWeight.bold,
                                     fontSize: 11,
                                   ),
                                 ),
                               ),
 
-                              const SizedBox(
-                                  width: 6),
+                              const SizedBox(width: 6),
 
                               Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment
-                                        .start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     userName,
-                                    style:
-                                        const TextStyle(
-                                      fontSize:
-                                          11,
-                                      fontWeight:
-                                          FontWeight
-                                              .bold,
-                                    ),
-                                  ),
-
-                                  const Text(
-                                    "ID: #HP-2026",
-                                    style:
-                                        TextStyle(
-                                      fontSize:
-                                          8,
-                                      color: Colors
-                                          .grey,
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ],
@@ -366,18 +254,14 @@ class _DashboardScreenState
 
               const SizedBox(height: 20),
 
-              //  SUMMARY CARD 
+              //  SUMMARY CARD
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
 
                 child: GridView.count(
                   crossAxisCount: 2,
                   shrinkWrap: true,
-                  physics:
-                      const NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
                   childAspectRatio: 1.25,
@@ -416,160 +300,26 @@ class _DashboardScreenState
 
               const SizedBox(height: 20),
 
-              //  RADAR SECTION 
-              Container(
-                margin:
-                    const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-
-                padding: const EdgeInsets.all(20),
-
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius:
-                      BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color:
-                          Colors.black.withOpacity(
-                              0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment
-                                    .start,
-                            children: [
-                              Text(
-                                "Perbandingan Checkup",
-                                style: TextStyle(
-                                  color:
-                                      Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-
-                              SizedBox(height: 8),
-
-                              Text(
-                                "Radar Kondisi Tubuh",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight:
-                                      FontWeight
-                                          .bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        ElevatedButton(
-                          style:
-                              ElevatedButton.styleFrom(
-                            backgroundColor:
-                                primaryGreen,
-                            foregroundColor:
-                                Colors.white,
-                            elevation: 0,
-                          ),
-
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              '/history',
-                            );
-                          },
-
-                          child:
-                              const Text("Riwayat"),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 40),
-
-                    Container(
-                      width: 90,
-                      height: 90,
-
-                      decoration: BoxDecoration(
-                        color: primaryGreen
-                            .withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-
-                      child: const Icon(
-                        Icons.show_chart,
-                        size: 45,
-                        color: primaryGreen,
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    Text(
-                      totalPrediksi > 0
-                          ? "Data Checkup Tersedia"
-                          : "Belum Ada Data Checkup",
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    Text(
-                      totalPrediksi > 0
-                          ? "Total checkup: $totalPrediksi"
-                          : "Radar chart akan muncul\nsetelah user melakukan prediksi.",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        height: 1.6,
-                      ),
-                    ),
-                  ],
-                ),
+              //  RADAR SECTION
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: radarSection(primaryGreen),
               ),
 
               const SizedBox(height: 20),
 
-              //  PREDIKSI TERAKHIR 
+              //  PREDIKSI TERAKHIR
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: predictionCard(
-                  primaryGreen,
-                  context,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: predictionCard(primaryGreen, context),
               ),
 
               const SizedBox(height: 20),
 
-              //  KONSULTASI 
+              //  KONSULTASI
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: consultationCard(
-                  context,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: consultationCard(context),
               ),
 
               const SizedBox(height: 24),
@@ -580,28 +330,20 @@ class _DashboardScreenState
     );
   }
 
-  //  SUMMARY CARD 
-  Widget summaryCard(
-    IconData icon,
-    String title,
-    String value,
-    Color color,
-  ) {
+  //  SUMMARY CARD
+  Widget summaryCard(IconData icon, String title, String value, Color color) {
     return Container(
-      constraints:
-          const BoxConstraints(minHeight: 150),
+      constraints: const BoxConstraints(minHeight: 150),
 
       padding: const EdgeInsets.all(14),
 
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(22),
 
         boxShadow: [
           BoxShadow(
-            color:
-                Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -609,8 +351,7 @@ class _DashboardScreenState
       ),
 
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
@@ -618,15 +359,10 @@ class _DashboardScreenState
 
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius:
-                  BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(14),
             ),
 
-            child: Icon(
-              icon,
-              color: color,
-              size: 22,
-            ),
+            child: Icon(icon, color: color, size: 22),
           ),
 
           const Spacer(),
@@ -646,9 +382,424 @@ class _DashboardScreenState
 
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget radarSection(Color primaryGreen) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isWide = constraints.maxWidth > 760;
+        final double chartSize = isWide
+            ? 190
+            : (constraints.maxWidth * 0.54).clamp(140, 190);
+        final double infoSpacing = isWide ? 12 : 0;
+
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              if (isWide)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      "Perbandingan Checkup",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "Radar Kondisi Tubuh",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: primaryGreen,
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                ),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/history');
+                                },
+                                child: const Text("Riwayat"),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 28),
+                          Center(
+                            child: Container(
+                              width: chartSize,
+                              height: chartSize,
+                              decoration: BoxDecoration(
+                                color: primaryGreen.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  ...List.generate(4, (index) {
+                                    final double size =
+                                        chartSize - (index * 30);
+                                    return Container(
+                                      width: size,
+                                      height: size,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: primaryGreen.withOpacity(0.12),
+                                          width: 1,
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                  Container(
+                                    width: chartSize * 0.58,
+                                    height: chartSize * 0.58,
+                                    decoration: BoxDecoration(
+                                      color: primaryGreen.withOpacity(0.14),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.show_chart,
+                                      size: 46,
+                                      color: Color(0xFF0AA06E),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Text(
+                            totalPrediksi > 0
+                                ? "Data Checkup Tersedia"
+                                : "Belum Ada Data Checkup",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            totalPrediksi > 0
+                                ? "Total checkup: $totalPrediksi"
+                                : "Radar chart akan muncul setelah user melakukan prediksi.",
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              height: 1.6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: radarInfoBox(
+                                  "Checkup Terbaru",
+                                  "19 Mei 2026",
+                                  "Risiko terakhir: $statusRisiko",
+                                  primaryGreen,
+                                ),
+                              ),
+                              SizedBox(width: infoSpacing),
+                              Expanded(
+                                child: radarInfoBox(
+                                  "Data Pembanding",
+                                  "Belum ada pembanding",
+                                  "Radar hanya menampilkan kondisi terbaru.",
+                                  Colors.grey.shade200,
+                                  textColor: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF8FAFC),
+                              borderRadius: BorderRadius.circular(22),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Ringkasan Perilaku & Riwayat",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 14),
+                                Wrap(
+                                  runSpacing: 10,
+                                  spacing: 10,
+                                  children: [
+                                    radarSummaryItem("Gender", "female"),
+                                    radarSummaryItem("Olahraga", "Jarang"),
+                                    radarSummaryItem("Merokok", "Tidak"),
+                                    radarSummaryItem(
+                                      "Alkohol",
+                                      "Tidak ada data",
+                                    ),
+                                    radarSummaryItem(
+                                      "Riwayat Medis",
+                                      "Tidak Ada Riwayat",
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              else
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                "Perbandingan Checkup",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Radar Kondisi Tubuh",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryGreen,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/history');
+                          },
+                          child: const Text("Riwayat"),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 28),
+                    Center(
+                      child: Container(
+                        width: chartSize,
+                        height: chartSize,
+                        decoration: BoxDecoration(
+                          color: primaryGreen.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            ...List.generate(4, (index) {
+                              final double size = chartSize - (index * 30);
+                              return Container(
+                                width: size,
+                                height: size,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: primaryGreen.withOpacity(0.12),
+                                    width: 1,
+                                  ),
+                                ),
+                              );
+                            }),
+                            Container(
+                              width: chartSize * 0.58,
+                              height: chartSize * 0.58,
+                              decoration: BoxDecoration(
+                                color: primaryGreen.withOpacity(0.14),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.show_chart,
+                                size: 46,
+                                color: Color(0xFF0AA06E),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      totalPrediksi > 0
+                          ? "Data Checkup Tersedia"
+                          : "Belum Ada Data Checkup",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      totalPrediksi > 0
+                          ? "Total checkup: $totalPrediksi"
+                          : "Radar chart akan muncul setelah user melakukan prediksi.",
+                      style: const TextStyle(color: Colors.grey, height: 1.6),
+                    ),
+                    const SizedBox(height: 24),
+                    radarInfoBox(
+                      "Checkup Terbaru",
+                      "19 Mei 2026",
+                      "Risiko terakhir: $statusRisiko",
+                      primaryGreen,
+                    ),
+                    const SizedBox(height: 12),
+                    radarInfoBox(
+                      "Data Pembanding",
+                      "Belum ada pembanding",
+                      "Radar hanya menampilkan kondisi terbaru.",
+                      Colors.grey.shade200,
+                      textColor: Colors.black87,
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(22),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Ringkasan Perilaku & Riwayat",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 14),
+                          Wrap(
+                            runSpacing: 10,
+                            spacing: 10,
+                            children: [
+                              radarSummaryItem("Gender", "female"),
+                              radarSummaryItem("Olahraga", "Jarang"),
+                              radarSummaryItem("Merokok", "Tidak"),
+                              radarSummaryItem("Alkohol", "Tidak ada data"),
+                              radarSummaryItem(
+                                "Riwayat Medis",
+                                "Tidak Ada Riwayat",
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 24),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  radarMetricBox("Usia", "21th", isWide: isWide),
+                  radarMetricBox("Sistolik", "120 mmHg", isWide: isWide),
+                  radarMetricBox("Diastolik", "75 mmHg", isWide: isWide),
+                  radarMetricBox("Kolesterol", "100 mg/dL", isWide: isWide),
+                  radarMetricBox("Detak", "80 bpm", isWide: isWide),
+                  radarMetricBox("Berat", "40 kg", isWide: isWide),
+                  radarMetricBox("Tinggi", "151 cm", isWide: isWide),
+                  radarMetricBox("Gula Darah", "50 mg/dL", isWide: isWide),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget radarInfoBox(
+    String title,
+    String primary,
+    String subtitle,
+    Color background, {
+    Color textColor = Colors.white,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(color: textColor.withOpacity(0.8), fontSize: 11),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            primary,
+            style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            subtitle,
+            style: TextStyle(
+              color: textColor.withOpacity(0.8),
+              fontSize: 12,
+              height: 1.5,
             ),
           ),
         ],
@@ -656,11 +807,58 @@ class _DashboardScreenState
     );
   }
 
-  //  PREDICTION CARD 
-  Widget predictionCard(
-    Color primaryGreen,
-    BuildContext context,
-  ) {
+  Widget radarSummaryItem(String label, String value) {
+    return Container(
+      width: 134,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 10),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget radarMetricBox(String label, String value, {bool isWide = true}) {
+    return Container(
+      width: isWide ? 160 : null,
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //  PREDICTION CARD
+  Widget predictionCard(Color primaryGreen, BuildContext context) {
     return Container(
       width: double.infinity,
 
@@ -670,19 +868,14 @@ class _DashboardScreenState
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF059669),
-            Color(0xFF047857),
-          ],
+          colors: [Color(0xFF059669), Color(0xFF047857)],
         ),
 
-        borderRadius:
-            BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(28),
       ),
 
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             "Prediksi Terakhir",
@@ -698,8 +891,7 @@ class _DashboardScreenState
           Text(
             statusRisiko.toUpperCase(),
             style: TextStyle(
-              color:
-                  Colors.white.withOpacity(0.85),
+              color: Colors.white.withOpacity(0.85),
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
@@ -712,8 +904,7 @@ class _DashboardScreenState
             height: 72,
 
             decoration: BoxDecoration(
-              color:
-                  Colors.white.withOpacity(0.12),
+              color: Colors.white.withOpacity(0.12),
               shape: BoxShape.circle,
             ),
 
@@ -727,9 +918,7 @@ class _DashboardScreenState
           const SizedBox(height: 20),
 
           Text(
-            totalPrediksi > 0
-                ? "PREDIKSI TERAKHIR"
-                : "BELUM ADA PREDIKSI",
+            totalPrediksi > 0 ? "PREDIKSI TERAKHIR" : "BELUM ADA PREDIKSI",
             style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -744,8 +933,7 @@ class _DashboardScreenState
                 ? "Terakhir checkup: $lastCheckDate"
                 : "Mulai cek kesehatan untuk mendapatkan analisis risiko penyakit jantung.",
             style: TextStyle(
-              color:
-                  Colors.white.withOpacity(0.85),
+              color: Colors.white.withOpacity(0.85),
               height: 1.6,
               fontSize: 13,
             ),
@@ -757,38 +945,23 @@ class _DashboardScreenState
             children: [
               Expanded(
                 child: OutlinedButton(
-                  style:
-                      OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: Colors.white
-                          .withOpacity(0.4),
-                    ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.white.withOpacity(0.4)),
 
-                    foregroundColor:
-                        Colors.white,
+                    foregroundColor: Colors.white,
 
-                    padding:
-                        const EdgeInsets.symmetric(
-                      vertical: 14,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
 
-                    shape:
-                        RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(
-                              14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
                     ),
                   ),
 
                   onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/history',
-                    );
+                    Navigator.pushNamed(context, '/history');
                   },
 
-                  child:
-                      const Text("Riwayat"),
+                  child: const Text("Lihat Riwayat"),
                 ),
               ),
 
@@ -796,42 +969,27 @@ class _DashboardScreenState
 
               Expanded(
                 child: ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.white,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
 
-                    foregroundColor:
-                        const Color(0xFF047857),
+                    foregroundColor: const Color(0xFF047857),
 
                     elevation: 0,
 
-                    padding:
-                        const EdgeInsets.symmetric(
-                      vertical: 14,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
 
-                    shape:
-                        RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(
-                              14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
                     ),
                   ),
 
                   onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/prediction',
-                    );
+                    Navigator.pushNamed(context, '/prediction');
                   },
 
                   child: const Text(
-                    "Cek Sekarang",
-                    style: TextStyle(
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
+                    "Detail Hasil",
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -842,10 +1000,8 @@ class _DashboardScreenState
     );
   }
 
-  //  CONSULTATION CARD 
-  Widget consultationCard(
-    BuildContext context,
-  ) {
+  //  CONSULTATION CARD
+  Widget consultationCard(BuildContext context) {
     return Container(
       width: double.infinity,
 
@@ -853,13 +1009,11 @@ class _DashboardScreenState
 
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(28),
 
         boxShadow: [
           BoxShadow(
-            color:
-                Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -873,37 +1027,28 @@ class _DashboardScreenState
               const Expanded(
                 child: Text(
                   "Konsultasi Terakhir",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight:
-                        FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
 
               Container(
-                padding:
-                    const EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 10,
                   vertical: 6,
                 ),
 
                 decoration: BoxDecoration(
-                  color:
-                      const Color(0xFFECFDF5),
+                  color: const Color(0xFFECFDF5),
 
-                  borderRadius:
-                      BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20),
                 ),
 
                 child: const Text(
                   "LIHAT",
                   style: TextStyle(
-                    color:
-                        Color(0xFF059669),
+                    color: Color(0xFF059669),
                     fontSize: 10,
-                    fontWeight:
-                        FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -946,45 +1091,27 @@ class _DashboardScreenState
             width: double.infinity,
 
             child: OutlinedButton(
-              style:
-                  OutlinedButton.styleFrom(
-                foregroundColor:
-                    const Color(0xFF64748B),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFF64748B),
 
-                side: BorderSide(
-                  color: Colors.grey.shade300,
-                ),
+                side: BorderSide(color: Colors.grey.shade300),
 
-                padding:
-                    const EdgeInsets.symmetric(
-                  vertical: 15,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 15),
 
-                shape:
-                    RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(
-                          14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
 
               onPressed: () {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Mulai konsultasi baru',
-                    ),
-                  ),
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Mulai konsultasi baru')),
                 );
               },
 
               child: const Text(
                 "+ Mulai Konsultasi Baru",
-                style: TextStyle(
-                  fontWeight:
-                      FontWeight.w600,
-                ),
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -993,16 +1120,8 @@ class _DashboardScreenState
     );
   }
 
-  //  DRAWER ITEM 
-  static Widget drawerItem(
-    IconData icon,
-    String title,
-    VoidCallback onTap,
-  ) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      onTap: onTap,
-    );
+  //  DRAWER ITEM
+  static Widget drawerItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
   }
 }

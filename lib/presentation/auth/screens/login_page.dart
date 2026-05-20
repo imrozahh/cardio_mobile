@@ -218,14 +218,6 @@ class _LoginPageState extends State<LoginPage> {
                             // REMEMBER ME & FORGOT PASSWORD
                             Row(
                               children: [
-                                Checkbox(
-                                  value: rememberMe,
-                                  activeColor: primaryGreen,
-                                  onChanged: (value) {
-                                    setState(() => rememberMe = value!);
-                                  },
-                                ),
-                                const Text("Ingat saya"),
                                 const Spacer(),
                                 TextButton(
                                   onPressed: () =>
