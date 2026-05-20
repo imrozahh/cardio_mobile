@@ -5,114 +5,355 @@ class PredictionResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const emerald = Color(0xFF10B981);
+    final Color primaryGreen =
+        const Color(0xFF0AA06E);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFF5F7FB),
 
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: false,
         title: const Text(
-          'Prediction Result',
+          "Hasil Prediksi",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-
-        backgroundColor: emerald,
-        foregroundColor: Colors.white,
-        centerTitle: true,
+        iconTheme:
+            const IconThemeData(color: Colors.black),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(20),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              //  RESULT CARD 
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF059669),
+                      Color(0xFF047857),
+                    ],
+                  ),
+                  borderRadius:
+                      BorderRadius.circular(28),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 90,
+                      height: 90,
+                      decoration: BoxDecoration(
+                        color:
+                            Colors.white.withOpacity(
+                          0.15,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.favorite,
+                        color: Colors.white,
+                        size: 45,
+                      ),
+                    ),
 
-        child: Column(
-          children: [
-            //  RESULT CARD 
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
+                    const SizedBox(height: 24),
 
-              decoration: BoxDecoration(
-                color: Colors.red.shade50,
-                borderRadius: BorderRadius.circular(24),
+                    const Text(
+                      "RISIKO RENDAH",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    Text(
+                      "Berdasarkan data kesehatan Anda, risiko penyakit jantung tergolong rendah.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color:
+                            Colors.white.withOpacity(
+                          0.9,
+                        ),
+                        height: 1.6,
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    Container(
+                      padding:
+                          const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color:
+                            Colors.white.withOpacity(
+                          0.15,
+                        ),
+                        borderRadius:
+                            BorderRadius.circular(
+                          16,
+                        ),
+                      ),
+                      child: const Text(
+                        "Tingkat Akurasi AI : 95%",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight:
+                              FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.warning_amber_rounded,
-                    size: 80,
-                    color: Colors.red.shade400,
+              const SizedBox(height: 24),
+
+              //  HEALTH INFO 
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                      BorderRadius.circular(24),
+                ),
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Ringkasan Kesehatan",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    infoTile(
+                      Icons.favorite_border,
+                      "Tekanan Darah",
+                      "120 / 80 mmHg",
+                      Colors.red,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    infoTile(
+                      Icons.monitor_heart,
+                      "Detak Jantung",
+                      "72 bpm",
+                      Colors.purple,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    infoTile(
+                      Icons.water_drop_outlined,
+                      "Kolesterol",
+                      "200 mg/dL",
+                      Colors.blue,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    infoTile(
+                      Icons.monitor_weight,
+                      "Berat Badan",
+                      "70 Kg",
+                      Colors.orange,
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              //  RECOMMENDATION 
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                      BorderRadius.circular(24),
+                ),
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Rekomendasi AI",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    recommendationTile(
+                      "Perbanyak olahraga ringan minimal 30 menit per hari.",
+                    ),
+
+                    recommendationTile(
+                      "Kurangi makanan berlemak tinggi dan gula berlebih.",
+                    ),
+
+                    recommendationTile(
+                      "Lakukan pengecekan kesehatan rutin setiap bulan.",
+                    ),
+
+                    recommendationTile(
+                      "Istirahat cukup dan kelola stres dengan baik.",
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              //  BUTTON 
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryGreen,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding:
+                        const EdgeInsets.symmetric(
+                      vertical: 18,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(18),
+                    ),
                   ),
-
-                  const SizedBox(height: 16),
-
-                  const Text(
-                    'High Risk',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    "Kembali",
                     style: TextStyle(
-                      fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red,
+                      fontSize: 16,
                     ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  const Text(
-                    '87% Probability',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  const Text(
-                    'You are advised to consult a cardiologist and adopt a healthier lifestyle.',
-                    textAlign: TextAlign.center,
-
-                    style: TextStyle(
-                      height: 1.5,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const Spacer(),
-
-            //  BUTTON 
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: emerald,
-
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-
-                onPressed: () {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/',
-                  );
-                },
-
-                child: const Text(
-                  'Back to Dashboard',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  //  INFO TILE 
+  Widget infoTile(
+    IconData icon,
+    String title,
+    String value,
+    Color color,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius:
+                  BorderRadius.circular(14),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+            ),
+          ),
+
+          const SizedBox(width: 14),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontWeight:
+                        FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //  RECOMMENDATION 
+  Widget recommendationTile(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.check_circle,
+            color: Colors.green,
+            size: 22,
+          ),
+
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                height: 1.6,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

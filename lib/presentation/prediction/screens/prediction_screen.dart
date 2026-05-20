@@ -1,196 +1,407 @@
 import 'package:flutter/material.dart';
 
-//  GLOBAL COLOR 
-const emerald = Color(0xFF10B981);
-
 class PredictionScreen extends StatefulWidget {
   const PredictionScreen({super.key});
 
   @override
-  State<PredictionScreen> createState() => _PredictionScreenState();
+  State<PredictionPage> createState() =>
+      _PredictionPageState();
 }
 
-class _PredictionScreenState extends State<PredictionScreen> {
-  final TextEditingController ageController = TextEditingController();
+class _PredictionPageState
+    extends State<PredictionPage> {
+  final Color primaryGreen =
+      const Color(0xFF0AA06E);
 
-  final TextEditingController cholesterolController =
+  final TextEditingController usiaController =
       TextEditingController();
 
-  final TextEditingController bpController = TextEditingController();
+  final TextEditingController sistolikController =
+      TextEditingController();
 
-  @override
-  void dispose() {
-    ageController.dispose();
-    cholesterolController.dispose();
-    bpController.dispose();
-    super.dispose();
-  }
+  final TextEditingController diastolikController =
+      TextEditingController();
+
+  final TextEditingController kolesterolController =
+      TextEditingController();
+
+  final TextEditingController gulaController =
+      TextEditingController();
+
+  final TextEditingController detakController =
+      TextEditingController();
+
+  final TextEditingController beratController =
+      TextEditingController();
+
+  final TextEditingController tinggiController =
+      TextEditingController();
+
+  String gender = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFF5F7FB),
 
-      //  APPBAR 
       appBar: AppBar(
+        backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: true,
-        backgroundColor: emerald,
-        foregroundColor: Colors.white,
-
+        centerTitle: false,
         title: const Text(
-          'AI Prediction',
+          "Cek Kesehatan",
           style: TextStyle(
+            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
+        iconTheme:
+            const IconThemeData(color: Colors.black),
       ),
 
-      //  BODY 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //  HEADER CARD 
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-
-              decoration: BoxDecoration(
-                color: emerald,
-                borderRadius: BorderRadius.circular(24),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Cek Kesehatan Jantung",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
 
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.favorite,
-                    color: Colors.white,
-                    size: 42,
-                  ),
+              const SizedBox(height: 8),
 
-                  SizedBox(width: 14),
+              const Text(
+                "Lengkapi data kesehatan Anda untuk mendapatkan prediksi AI.",
+                style: TextStyle(
+                  color: Colors.grey,
+                  height: 1.5,
+                ),
+              ),
 
-                  Expanded(
-                    child: Text(
-                      'Predict your heart disease risk using AI technology.',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        height: 1.4,
-                      ),
+              const SizedBox(height: 24),
+
+              //  DEMOGRAFI 
+              sectionCard(
+                icon: Icons.person_outline,
+                color: Colors.green,
+                title: "Data Demografis",
+                child: Column(
+                  children: [
+                    buildInput(
+                      "Usia",
+                      "Contoh: 35",
+                      usiaController,
+                      Icons.calendar_today,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Jenis Kelamin",
+                          style: TextStyle(
+                            fontWeight:
+                                FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: genderButton(
+                                "Laki-laki",
+                              ),
+                            ),
+
+                            const SizedBox(width: 12),
+
+                            Expanded(
+                              child: genderButton(
+                                "Perempuan",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              //  DATA VITAL 
+              sectionCard(
+                icon:
+                    Icons.monitor_heart_outlined,
+                color: Colors.purple,
+                title: "Data Vital",
+                child: Column(
+                  children: [
+                    buildInput(
+                      "Tekanan Darah Sistolik",
+                      "120",
+                      sistolikController,
+                      Icons.favorite_border,
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    buildInput(
+                      "Tekanan Darah Diastolik",
+                      "80",
+                      diastolikController,
+                      Icons.favorite_border,
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    buildInput(
+                      "Kolesterol Total",
+                      "200",
+                      kolesterolController,
+                      Icons.water_drop_outlined,
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    buildInput(
+                      "Gula Darah Puasa",
+                      "95",
+                      gulaController,
+                      Icons.water_drop_outlined,
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    buildInput(
+                      "Detak Jantung",
+                      "72",
+                      detakController,
+                      Icons.monitor_heart,
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    buildInput(
+                      "Berat Badan",
+                      "70",
+                      beratController,
+                      Icons.monitor_weight,
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    buildInput(
+                      "Tinggi Badan",
+                      "170",
+                      tinggiController,
+                      Icons.height,
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              //  BUTTON 
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryGreen,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding:
+                        const EdgeInsets.symmetric(
+                      vertical: 18,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(18),
                     ),
                   ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            //  INPUT AGE 
-            _buildInput(
-              'Age',
-              ageController,
-              Icons.cake_outlined,
-            ),
-
-            const SizedBox(height: 18),
-
-            //  INPUT CHOLESTEROL 
-            _buildInput(
-              'Cholesterol',
-              cholesterolController,
-              Icons.monitor_heart_outlined,
-            ),
-
-            const SizedBox(height: 18),
-
-            //  INPUT BLOOD PRESSURE 
-            _buildInput(
-              'Blood Pressure',
-              bpController,
-              Icons.favorite_border,
-            ),
-
-            const SizedBox(height: 35),
-
-            //  BUTTON 
-            SizedBox(
-              width: double.infinity,
-              height: 58,
-
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: emerald,
-                  elevation: 0,
-
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                ),
-
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/');
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/prediction-result',
+                    );
                   },
+                  child: const Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Mulai Analisis AI",
+                        style: TextStyle(
+                          fontWeight:
+                              FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
 
-                child: const Text(
-                  'Predict Now',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                      SizedBox(width: 10),
+
+                      Icon(Icons.arrow_forward),
+                    ],
                   ),
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  //  INPUT FIELD 
-  Widget _buildInput(
-    String label,
+  //  CARD 
+  Widget sectionCard({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required Widget child,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius:
+                      BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  icon,
+                  color: color,
+                ),
+              ),
+
+              const SizedBox(width: 14),
+
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 22),
+
+          child,
+        ],
+      ),
+    );
+  }
+
+  //  INPUT 
+  Widget buildInput(
+    String title,
+    String hint,
     TextEditingController controller,
     IconData icon,
   ) {
-    return TextField(
-      controller: controller,
-      keyboardType: TextInputType.number,
-
-      decoration: InputDecoration(
-        labelText: label,
-
-        prefixIcon: Icon(icon),
-
-        filled: true,
-        fillColor: Colors.white,
-
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 18,
-        ),
-
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide.none,
-        ),
-
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
+    return Column(
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
           ),
         ),
 
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(
-            color: emerald,
-            width: 2,
+        const SizedBox(height: 10),
+
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hint,
+            prefixIcon: Icon(icon),
+            filled: true,
+            fillColor: const Color(0xFFF8FAFC),
+            border: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  //  GENDER BUTTON 
+  Widget genderButton(String text) {
+    bool isSelected = gender == text;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          gender = text;
+        });
+      },
+
+      child: AnimatedContainer(
+        duration: const Duration(
+          milliseconds: 200,
+        ),
+
+        height: 55,
+
+        decoration: BoxDecoration(
+          color: isSelected
+              ? primaryGreen
+              : const Color(0xFFF8FAFC),
+
+          borderRadius:
+              BorderRadius.circular(16),
+
+          border: Border.all(
+            color: isSelected
+                ? primaryGreen
+                : Colors.grey.shade300,
+          ),
+        ),
+
+        child: Center(
+          child: Text(
+            text,
+
+            style: TextStyle(
+              color: isSelected
+                  ? Colors.white
+                  : Colors.black87,
+
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
