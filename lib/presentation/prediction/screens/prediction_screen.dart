@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dio/dio.dart';
+
+import '../../../core/constants/app_constants.dart';
+import '../../auth/bloc/auth_bloc.dart';
 
 import '../bloc/prediction_bloc.dart';
 import '../bloc/prediction_event.dart';
@@ -17,6 +21,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
   final Color primaryGreen = const Color(0xFF0AA06E);
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final Dio _dio = Dio();
 
   final TextEditingController usiaController = TextEditingController();
   final TextEditingController sistolikController = TextEditingController();
@@ -32,13 +37,17 @@ class _PredictionScreenState extends State<PredictionScreen> {
   int currentIndex = 1;
   String smoking = '';
   String activity = '';
+  bool _isLoadingProfileData = false;
 
   @override
   void initState() {
     super.initState();
     beratController.addListener(_recalculateBmi);
     tinggiController.addListener(_recalculateBmi);
-    _loadProfileData();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProfileData();
+    });
   }
 
   @override
@@ -54,42 +63,179 @@ class _PredictionScreenState extends State<PredictionScreen> {
     super.dispose();
   }
 
-  Future<void> _loadProfileData() async {
-    final savedAge = await _storage.read(key: 'profile_age');
-    final savedGender = await _storage.read(key: 'profile_gender');
-    final savedBirthDate = await _storage.read(key: 'profile_birth_date');
-    final savedWeight = await _storage.read(key: 'profile_weight');
-    final savedHeight = await _storage.read(key: 'profile_height');
+  Future<Options> _authOptions() async {
+    final token = await _storage.read(key: AppConstants.tokenKey);
 
-    String? calculatedAge = savedAge;
+    return Options(
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
+      },
+    );
+  }
 
-    if ((calculatedAge == null || calculatedAge.isEmpty) &&
-        savedBirthDate != null &&
-        savedBirthDate.isNotEmpty) {
-      final birthDate = DateTime.tryParse(savedBirthDate);
-      if (birthDate != null) {
-        calculatedAge = _calculateAge(birthDate).toString();
+  Map<String, dynamic> _asMap(dynamic value) {
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) return Map<String, dynamic>.from(value);
+    return <String, dynamic>{};
+  }
+
+  String _text(dynamic value) {
+    if (value == null) return '';
+    return value.toString();
+  }
+
+  dynamic _findValue(dynamic source, List<String> keys) {
+    if (source is Map) {
+      final map = Map<String, dynamic>.from(source);
+
+      for (final key in keys) {
+        if (map.containsKey(key) && map[key] != null) {
+          final value = map[key];
+          if (value.toString().trim().isNotEmpty) return value;
+        }
+      }
+
+      for (final value in map.values) {
+        if (value is Map || value is List) {
+          final result = _findValue(value, keys);
+          if (result != null && result.toString().trim().isNotEmpty) {
+            return result;
+          }
+        }
       }
     }
 
-    if (!mounted) return;
+    if (source is List) {
+      for (final value in source) {
+        final result = _findValue(value, keys);
+        if (result != null && result.toString().trim().isNotEmpty) {
+          return result;
+        }
+      }
+    }
 
-    setState(() {
-      if (calculatedAge != null && calculatedAge.isNotEmpty) {
-        usiaController.text = calculatedAge;
-      }
-      if (savedGender != null && savedGender.isNotEmpty) {
-        gender = savedGender;
-      }
-      if (savedWeight != null && savedWeight.isNotEmpty) {
-        beratController.text = savedWeight;
-      }
-      if (savedHeight != null && savedHeight.isNotEmpty) {
-        tinggiController.text = savedHeight;
-      }
-    });
+    return null;
+  }
 
-    _recalculateBmi();
+  DateTime? _parseBirthDate(dynamic value) {
+    if (value == null) return null;
+
+    final text = value.toString();
+    if (text.isEmpty) return null;
+
+    return DateTime.tryParse(text);
+  }
+
+  Future<void> _loadProfileData() async {
+    setState(() => _isLoadingProfileData = true);
+
+    try {
+      final response = await _dio.get(
+        'http://127.0.0.1:8000/api/profile',
+        options: await _authOptions(),
+      );
+
+      final body = _asMap(response.data);
+
+      final birthDate = _parseBirthDate(
+        _findValue(body, [
+          'birth_date',
+          'tanggal_lahir',
+          'date_of_birth',
+          'dob',
+        ]),
+      );
+
+      String calculatedAge = _text(_findValue(body, ['age', 'usia', 'umur']));
+
+      if (calculatedAge.isEmpty && birthDate != null) {
+        calculatedAge = _calculateAge(birthDate).toString();
+      }
+
+      final savedGender = _text(
+        _findValue(body, ['gender', 'jenis_kelamin', 'sex']),
+      );
+
+      final savedWeight = _text(
+        _findValue(body, ['weight', 'berat', 'berat_badan', 'bb']),
+      );
+
+      final savedHeight = _text(
+        _findValue(body, ['height', 'tinggi', 'tinggi_badan', 'tb']),
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        if (calculatedAge.isNotEmpty && calculatedAge != 'null') {
+          usiaController.text = calculatedAge;
+        }
+
+        final genderLower = savedGender.toLowerCase();
+
+        if (genderLower.contains('perempuan') ||
+            genderLower == 'female' ||
+            genderLower == 'wanita' ||
+            genderLower == '2') {
+          gender = 'Perempuan';
+        } else if (genderLower.contains('laki') ||
+            genderLower == 'male' ||
+            genderLower == 'pria' ||
+            genderLower == '1') {
+          gender = 'Laki-laki';
+        }
+
+        if (savedWeight.isNotEmpty && savedWeight != 'null') {
+          beratController.text = savedWeight;
+        }
+
+        if (savedHeight.isNotEmpty && savedHeight != 'null') {
+          tinggiController.text = savedHeight;
+        }
+      });
+
+      _recalculateBmi();
+
+      if (!mounted) return;
+
+      if (calculatedAge.isEmpty &&
+          savedGender.isEmpty &&
+          savedWeight.isEmpty &&
+          savedHeight.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Profil berhasil diambil, tapi data usia/gender/berat/tinggi masih kosong di database',
+            ),
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      if (!mounted) return;
+
+      final responseData = e.response?.data;
+      String message = 'Gagal mengambil data profil dari database';
+
+      if (responseData is Map && responseData['message'] != null) {
+        message = responseData['message'].toString();
+      }
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal mengambil data profil: $e')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isLoadingProfileData = false);
+      }
+    }
   }
 
   int _calculateAge(DateTime birthDate) {
@@ -137,6 +283,13 @@ class _PredictionScreenState extends State<PredictionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthBloc>().state;
+    String userName = "User";
+
+    if (authState is Authenticated) {
+      userName = authState.user.name;
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7FAFB),
 
@@ -150,7 +303,11 @@ class _PredictionScreenState extends State<PredictionScreen> {
         ),
         actions: [
           PopupMenuButton<String>(
-            icon: const Icon(Icons.account_circle_outlined),
+            tooltip: "Menu akun",
+            offset: const Offset(0, 44),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
             onSelected: (value) {
               if (value == 'profile') {
                 context.go('/profile');
@@ -163,23 +320,69 @@ class _PredictionScreenState extends State<PredictionScreen> {
                 value: 'profile',
                 child: Row(
                   children: [
-                    Icon(Icons.person_outline),
+                    Icon(Icons.person_outline, size: 20),
                     SizedBox(width: 10),
                     Text('Profil'),
                   ],
                 ),
               ),
+              PopupMenuDivider(),
               PopupMenuItem(
                 value: 'logout',
                 child: Row(
                   children: [
-                    Icon(Icons.logout),
+                    Icon(Icons.logout, size: 20, color: Colors.red),
                     SizedBox(width: 10),
-                    Text('Logout'),
+                    Text('Logout', style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),
             ],
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: 14,
+                    backgroundColor: primaryGreen.withOpacity(0.1),
+                    child: Text(
+                      userName.isNotEmpty ? userName[0].toUpperCase() : "U",
+                      style: TextStyle(
+                        color: primaryGreen,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 86),
+                    child: Text(
+                      userName,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 18,
+                    color: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -206,6 +409,36 @@ class _PredictionScreenState extends State<PredictionScreen> {
                   const Text(
                     'Lengkapi data kesehatan Anda untuk mendapatkan prediksi risiko penyakit jantung oleh AI.',
                     style: TextStyle(color: Colors.black54, height: 1.6),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: OutlinedButton.icon(
+                      onPressed: _isLoadingProfileData
+                          ? null
+                          : _loadProfileData,
+                      icon: _isLoadingProfileData
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.sync),
+                      label: Text(
+                        _isLoadingProfileData
+                            ? 'Mengambil data profil...'
+                            : 'Ambil Data dari Profil',
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: primaryGreen,
+                        side: BorderSide(color: primaryGreen.withOpacity(0.4)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 20),

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../prediction/bloc/prediction_bloc.dart';
 import '../../prediction/bloc/prediction_event.dart';
 import '../../prediction/bloc/prediction_state.dart';
+import '../../auth/bloc/auth_bloc.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -73,6 +74,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthBloc>().state;
+    String userName = "User";
+
+    if (authState is Authenticated) {
+      userName = authState.user.name;
+    }
+
+    final currentDate = DateFormat(
+      'EEEE, d MMMM yyyy',
+      'id_ID',
+    ).format(DateTime.now()).toUpperCase();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
@@ -98,19 +111,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
             const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  'Halo, User 1',
-                  style: TextStyle(
+                  'Halo, $userName',
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
                     color: Color(0xFF1E293B),
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
-                  'SENIN, 25 MEI 2026',
-                  style: TextStyle(
+                  currentDate,
+                  style: const TextStyle(
                     color: Color(0xFF64748B),
                     fontSize: 8,
                     letterSpacing: 0.8,
@@ -122,73 +136,76 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         actions: [
           PopupMenuButton<String>(
-            onSelected: _handleProfileMenu,
-            offset: const Offset(0, 42),
+            tooltip: "Menu akun",
+            offset: const Offset(0, 44),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
+            onSelected: _handleProfileMenu,
             itemBuilder: (context) => const [
               PopupMenuItem(
                 value: 'profile',
                 child: Row(
                   children: [
-                    Icon(Icons.person_outline, size: 18),
+                    Icon(Icons.person_outline, size: 20),
                     SizedBox(width: 10),
                     Text('Profil'),
                   ],
                 ),
               ),
+              PopupMenuDivider(),
               PopupMenuItem(
                 value: 'logout',
                 child: Row(
                   children: [
-                    Icon(Icons.logout, size: 18, color: Colors.red),
+                    Icon(Icons.logout, size: 20, color: Colors.red),
                     SizedBox(width: 10),
-                    Text('Logout'),
+                    Text('Logout', style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),
             ],
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16),
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   CircleAvatar(
                     radius: 14,
-                    backgroundColor: primaryGreen.withOpacity(0.16),
-                    child: const Text(
-                      'U',
-                      style: TextStyle(
+                    backgroundColor: primaryGreen.withOpacity(0.1),
+                    child: Text(
+                      userName.isNotEmpty ? userName[0].toUpperCase() : "U",
+                      style: const TextStyle(
                         color: primaryGreen,
-                        fontSize: 11,
                         fontWeight: FontWeight.bold,
+                        fontSize: 11,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'User 1',
-                        style: TextStyle(
-                          color: Color(0xFF1E293B),
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  const SizedBox(width: 6),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 86),
+                    child: Text(
+                      userName,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
-                      Text(
-                        'PATIENT ID: #HR-2026',
-                        style: TextStyle(color: Color(0xFF64748B), fontSize: 8),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(width: 4),
                   const Icon(
                     Icons.keyboard_arrow_down,
-                    color: Color(0xFF64748B),
                     size: 18,
+                    color: Colors.grey,
                   ),
                 ],
               ),

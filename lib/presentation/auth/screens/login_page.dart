@@ -215,24 +215,6 @@ class _LoginPageState extends State<LoginPage> {
 
                             const SizedBox(height: 14),
 
-                            // REMEMBER ME & FORGOT PASSWORD
-                            Row(
-                              children: [
-                                const Spacer(),
-                                TextButton(
-                                  onPressed: () =>
-                                      context.push(AppRoutes.forgotPassword),
-                                  child: Text(
-                                    "Lupa Password?",
-                                    style: TextStyle(
-                                      color: primaryGreen,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
                             const SizedBox(height: 10),
 
                             // BUTTON LOGIN

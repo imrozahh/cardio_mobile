@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dio/dio.dart';
+
+import '../../../core/constants/app_constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,37 +19,155 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   late TabController _tabController;
 
+  final Dio _dio = Dio();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  final _nameController = TextEditingController(text: 'User 1');
+  final _nameController = TextEditingController(text: 'User');
+  final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
+
+  final _currentPasswordController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
   DateTime? _birthDate;
   String _gender = 'Laki-laki';
 
+  bool _isLoadingProfile = false;
+  bool _isSavingProfile = false;
+  bool _isUpdatingPassword = false;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _loadProfile();
+    _loadProfileFromDatabase();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     _nameController.dispose();
+    _emailController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
     _weightController.dispose();
     _heightController.dispose();
+    _currentPasswordController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  Future<Options> _authOptions() async {
+    final token = await _storage.read(key: AppConstants.tokenKey);
+
+    return Options(
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
+      },
+    );
+  }
+
+  Map<String, dynamic> _asMap(dynamic value) {
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) return Map<String, dynamic>.from(value);
+    return <String, dynamic>{};
+  }
+
+  String _text(dynamic value) {
+    if (value == null) return '';
+    return value.toString();
+  }
+
+  DateTime? _parseBirthDate(dynamic value) {
+    if (value == null) return null;
+
+    final text = value.toString();
+    if (text.isEmpty) return null;
+
+    return DateTime.tryParse(text);
+  }
+
+  Future<void> _loadProfileFromDatabase() async {
+    setState(() => _isLoadingProfile = true);
+
+    try {
+      final response = await _dio.get(
+        'http://127.0.0.1:8000/api/profile',
+        options: await _authOptions(),
+      );
+
+      final body = _asMap(response.data);
+      final data = _asMap(body['data'] ?? body);
+      final user = _asMap(data['user']);
+      final profile = _asMap(data['profile']);
+
+      final merged = <String, dynamic>{}
+        ..addAll(user)
+        ..addAll(profile)
+        ..addAll(data);
+
+      if (!mounted) return;
+
+      setState(() {
+        _nameController.text =
+            _text(merged['name'] ?? user['name'] ?? data['name']).isNotEmpty
+            ? _text(merged['name'] ?? user['name'] ?? data['name'])
+            : 'User';
+
+        _emailController.text = _text(
+          merged['email'] ?? user['email'] ?? data['email'],
+        );
+
+        _phoneController.text = _text(
+          merged['phone'] ?? merged['no_hp'] ?? merged['phone_number'],
+        );
+
+        _addressController.text = _text(merged['address'] ?? merged['alamat']);
+
+        final genderText = _text(merged['gender'] ?? merged['jenis_kelamin']);
+
+        if (genderText.toLowerCase().contains('perempuan') ||
+            genderText.toLowerCase() == 'female') {
+          _gender = 'Perempuan';
+        } else if (genderText.toLowerCase().contains('laki') ||
+            genderText.toLowerCase() == 'male') {
+          _gender = 'Laki-laki';
+        }
+
+        _birthDate = _parseBirthDate(
+          merged['birth_date'] ??
+              merged['tanggal_lahir'] ??
+              merged['date_of_birth'],
+        );
+
+        _weightController.text = _text(
+          merged['weight'] ?? merged['berat'] ?? merged['berat_badan'],
+        );
+
+        _heightController.text = _text(
+          merged['height'] ?? merged['tinggi'] ?? merged['tinggi_badan'],
+        );
+      });
+    } on DioException catch (e) {
+      debugPrint('PROFILE LOAD ERROR STATUS: ${e.response?.statusCode}');
+      debugPrint('PROFILE LOAD ERROR RESPONSE: ${e.response?.data}');
+      debugPrint('PROFILE LOAD ERROR MESSAGE: ${e.message}');
+
+      if (!mounted) return;
+      _showSnack(_errorMessageFromResponse(e.response?.data), isError: true);
+    } catch (e) {
+      if (!mounted) return;
+      _showSnack('Gagal mengambil data profil: $e', isError: true);
+    } finally {
+      if (mounted) setState(() => _isLoadingProfile = false);
+    }
   }
 
   Future<void> _pickBirthDate() async {
@@ -78,90 +199,174 @@ class _ProfileScreenState extends State<ProfileScreen>
     return age;
   }
 
-  Future<void> _loadProfile() async {
-    final name = await _storage.read(key: 'profile_name');
-    final phone = await _storage.read(key: 'profile_phone');
-    final address = await _storage.read(key: 'profile_address');
-    final gender = await _storage.read(key: 'profile_gender');
-    final birthDateText = await _storage.read(key: 'profile_birth_date');
-    final weight = await _storage.read(key: 'profile_weight');
-    final height = await _storage.read(key: 'profile_height');
+  String _genderForApi() {
+    if (_gender.toLowerCase().contains('perempuan')) {
+      return 'female';
+    }
 
-    if (!mounted) return;
-
-    setState(() {
-      if (name != null && name.isNotEmpty) {
-        _nameController.text = name;
-      }
-      if (phone != null) {
-        _phoneController.text = phone;
-      }
-      if (address != null) {
-        _addressController.text = address;
-      }
-      if (gender != null && gender.isNotEmpty) {
-        _gender = gender;
-      }
-      if (birthDateText != null && birthDateText.isNotEmpty) {
-        _birthDate = DateTime.tryParse(birthDateText);
-      }
-      if (weight != null) {
-        _weightController.text = weight;
-      }
-      if (height != null) {
-        _heightController.text = height;
-      }
-    });
+    return 'male';
   }
 
-  Future<void> _saveProfile() async {
+  Future<void> _saveProfileToDatabase() async {
     if (_nameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nama lengkap tidak boleh kosong')),
-      );
+      _showSnack('Nama lengkap tidak boleh kosong', isError: true);
       return;
     }
 
-    await _storage.write(
-      key: 'profile_name',
-      value: _nameController.text.trim(),
-    );
-    await _storage.write(
-      key: 'profile_phone',
-      value: _phoneController.text.trim(),
-    );
-    await _storage.write(
-      key: 'profile_address',
-      value: _addressController.text.trim(),
-    );
-    await _storage.write(key: 'profile_gender', value: _gender);
-    await _storage.write(
-      key: 'profile_weight',
-      value: _weightController.text.trim(),
-    );
-    await _storage.write(
-      key: 'profile_height',
-      value: _heightController.text.trim(),
-    );
+    setState(() => _isSavingProfile = true);
 
-    if (_birthDate != null) {
-      await _storage.write(
-        key: 'profile_birth_date',
-        value: _birthDate!.toIso8601String(),
+    try {
+      final payload = <String, dynamic>{
+        'name': _nameController.text.trim(),
+        'phone': _phoneController.text.trim(),
+        'address': _addressController.text.trim(),
+        'gender': _genderForApi(),
+        'birth_date': _birthDate == null
+            ? null
+            : DateFormat('yyyy-MM-dd').format(_birthDate!),
+        'age': _birthDate == null ? null : _calculateAge(_birthDate!),
+        'weight': double.tryParse(_weightController.text.trim()),
+        'height': double.tryParse(_heightController.text.trim()),
+      };
+
+      debugPrint('PROFILE UPDATE PAYLOAD: $payload');
+
+      final response = await _dio.put(
+        'http://127.0.0.1:8000/api/profile',
+        data: payload,
+        options: await _authOptions(),
       );
-      await _storage.write(
-        key: 'profile_age',
-        value: _calculateAge(_birthDate!).toString(),
+
+      debugPrint('PROFILE UPDATE STATUS: ${response.statusCode}');
+      debugPrint('PROFILE UPDATE RESPONSE: ${response.data}');
+
+      if (!mounted) return;
+
+      _showSnack(
+        response.data?['message']?.toString() ??
+            'Data profil berhasil disimpan ke database',
       );
+
+      await _loadProfileFromDatabase();
+    } on DioException catch (e) {
+      debugPrint('PROFILE UPDATE ERROR STATUS: ${e.response?.statusCode}');
+      debugPrint('PROFILE UPDATE ERROR RESPONSE: ${e.response?.data}');
+      debugPrint('PROFILE UPDATE ERROR MESSAGE: ${e.message}');
+
+      if (!mounted) return;
+      _showSnack(_errorMessageFromResponse(e.response?.data), isError: true);
+    } catch (e) {
+      if (!mounted) return;
+      _showSnack('Gagal menyimpan profil: $e', isError: true);
+    } finally {
+      if (mounted) setState(() => _isSavingProfile = false);
+    }
+  }
+
+  Future<void> _updatePasswordToDatabase() async {
+    final currentPassword = _currentPasswordController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmation = _confirmPasswordController.text.trim();
+
+    if (currentPassword.isEmpty || password.isEmpty || confirmation.isEmpty) {
+      _showSnack('Semua field password wajib diisi', isError: true);
+      return;
     }
 
-    if (!mounted) return;
+    if (password.length < 8) {
+      _showSnack('Password baru minimal 8 karakter', isError: true);
+      return;
+    }
 
+    if (password != confirmation) {
+      _showSnack('Konfirmasi password tidak sama', isError: true);
+      return;
+    }
+
+    setState(() => _isUpdatingPassword = true);
+
+    try {
+      final payload = {
+        'current_password': currentPassword,
+        'password': password,
+        'password_confirmation': confirmation,
+      };
+
+      debugPrint('PASSWORD UPDATE PAYLOAD KEYS: ${payload.keys.toList()}');
+
+      final response = await _dio.patch(
+        'http://127.0.0.1:8000/api/profile/password',
+        data: payload,
+        options: await _authOptions(),
+      );
+
+      debugPrint('PASSWORD UPDATE STATUS: ${response.statusCode}');
+      debugPrint('PASSWORD UPDATE RESPONSE: ${response.data}');
+
+      if (!mounted) return;
+
+      _currentPasswordController.clear();
+      _passwordController.clear();
+      _confirmPasswordController.clear();
+
+      _showSnack(
+        response.data?['message']?.toString() ?? 'Password berhasil diperbarui',
+      );
+    } on DioException catch (e) {
+      debugPrint('PASSWORD UPDATE ERROR STATUS: ${e.response?.statusCode}');
+      debugPrint('PASSWORD UPDATE ERROR RESPONSE: ${e.response?.data}');
+      debugPrint('PASSWORD UPDATE ERROR MESSAGE: ${e.message}');
+
+      if (!mounted) return;
+      _showSnack(_errorMessageFromResponse(e.response?.data), isError: true);
+    } catch (e) {
+      if (!mounted) return;
+      _showSnack('Gagal memperbarui password: $e', isError: true);
+    } finally {
+      if (mounted) setState(() => _isUpdatingPassword = false);
+    }
+  }
+
+  String _errorMessageFromResponse(dynamic responseData) {
+    if (responseData is Map) {
+      final map = Map<String, dynamic>.from(responseData);
+
+      final message = map['message']?.toString();
+
+      if (map['errors'] is Map) {
+        final errors = Map<String, dynamic>.from(map['errors']);
+        final details = errors.entries
+            .map((entry) {
+              final value = entry.value;
+              if (value is List) {
+                return '${entry.key}: ${value.join(', ')}';
+              }
+              return '${entry.key}: $value';
+            })
+            .join('\n');
+
+        if (details.isNotEmpty) {
+          return message == null || message.isEmpty
+              ? details
+              : '$message\n$details';
+        }
+      }
+
+      if (message != null && message.isNotEmpty) return message;
+    }
+
+    return responseData?.toString() ?? 'Terjadi kesalahan';
+  }
+
+  void _showSnack(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Data profil berhasil disimpan')),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : primaryGreen,
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+      ),
     );
-
-    setState(() {});
   }
 
   void _onBottomNavTap(int index) {
@@ -179,17 +384,15 @@ class _ProfileScreenState extends State<ProfileScreen>
         context.go('/history');
         break;
       case 4:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Halaman Konsultasi AI belum dibuat')),
-        );
+        _showSnack('Halaman Konsultasi AI belum dibuat');
         break;
     }
   }
 
-  void _showComingSoon(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+  void _logout() async {
+    await _storage.delete(key: AppConstants.tokenKey);
+    if (!mounted) return;
+    context.go('/login');
   }
 
   @override
@@ -214,7 +417,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               if (value == 'profile') {
                 context.go('/profile');
               } else if (value == 'logout') {
-                context.go('/login');
+                _logout();
               }
             },
             itemBuilder: (context) => const [
@@ -232,9 +435,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                 value: 'logout',
                 child: Row(
                   children: [
-                    Icon(Icons.logout),
+                    Icon(Icons.logout, color: Colors.red),
                     SizedBox(width: 10),
-                    Text('Logout'),
+                    Text('Logout', style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),
@@ -247,22 +450,24 @@ class _ProfileScreenState extends State<ProfileScreen>
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: Colors.grey.shade200),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   CircleAvatar(
                     radius: 14,
-                    backgroundColor: Color(0xFFE8F8F0),
+                    backgroundColor: const Color(0xFFE8F8F0),
                     child: Text(
-                      'U',
-                      style: TextStyle(
+                      _nameController.text.isNotEmpty
+                          ? _nameController.text[0].toUpperCase()
+                          : 'U',
+                      style: const TextStyle(
                         color: primaryGreen,
                         fontWeight: FontWeight.bold,
                         fontSize: 11,
                       ),
                     ),
                   ),
-                  SizedBox(width: 6),
-                  Icon(Icons.keyboard_arrow_down, color: Colors.black54),
+                  const SizedBox(width: 6),
+                  const Icon(Icons.keyboard_arrow_down, color: Colors.black54),
                 ],
               ),
             ),
@@ -270,18 +475,24 @@ class _ProfileScreenState extends State<ProfileScreen>
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            horizontal: isWide ? 28 : 16,
-            vertical: 16,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1180),
-              child: isWide ? _wideLayout() : _mobileLayout(),
-            ),
-          ),
-        ),
+        child: _isLoadingProfile
+            ? const Center(child: CircularProgressIndicator())
+            : RefreshIndicator(
+                onRefresh: _loadProfileFromDatabase,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isWide ? 28 : 16,
+                    vertical: 16,
+                  ),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1180),
+                      child: isWide ? _wideLayout() : _mobileLayout(),
+                    ),
+                  ),
+                ),
+              ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
@@ -400,48 +611,25 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget _avatar({required double size}) {
-    return Stack(
-      children: [
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.12),
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Center(
-            child: Text(
-              _nameController.text.isNotEmpty
-                  ? _nameController.text[0].toUpperCase()
-                  : 'U',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: size * 0.38,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Center(
+        child: Text(
+          _nameController.text.isNotEmpty
+              ? _nameController.text[0].toUpperCase()
+              : 'U',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: size * 0.38,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        Positioned(
-          right: -4,
-          bottom: -4,
-          child: InkWell(
-            onTap: () => _showComingSoon('Fitur ubah foto belum dibuat'),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              padding: const EdgeInsets.all(7),
-              child: const Icon(
-                Icons.camera_alt,
-                size: 16,
-                color: Color(0xFF047857),
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -450,7 +638,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          _nameController.text,
+          _nameController.text.isEmpty ? 'User' : _nameController.text,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
@@ -460,17 +648,20 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
         const SizedBox(height: 4),
-        const Text(
-          'user1@gmail.com',
+        Text(
+          _emailController.text.isEmpty ? '-' : _emailController.text,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(color: Colors.white70),
+          style: const TextStyle(color: Colors.white70),
         ),
         const SizedBox(height: 14),
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: [_profileBadge('MEMBER SEJAK APR 2026'), _verifiedBadge()],
+          children: [
+            _profileBadge('DATA TERSIMPAN DATABASE'),
+            _verifiedBadge(),
+          ],
         ),
       ],
     );
@@ -551,6 +742,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ? '-'
                 : DateFormat('dd MMMM yyyy', 'id_ID').format(_birthDate!),
           ),
+          const SizedBox(height: 12),
+          _summaryItem(
+            Icons.monitor_weight_outlined,
+            'Berat / Tinggi',
+            '${_weightController.text.isEmpty ? '-' : _weightController.text} kg / ${_heightController.text.isEmpty ? '-' : _heightController.text} cm',
+          ),
         ],
       ),
     );
@@ -579,7 +776,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
               const SizedBox(height: 2),
               Text(
-                value,
+                value.isEmpty ? '-' : value,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontWeight: FontWeight.w700),
@@ -679,6 +876,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         hint: 'Contoh: 50',
         icon: Icons.monitor_weight,
         keyboardType: TextInputType.number,
+        onChanged: (_) => setState(() {}),
       ),
       _inputField(
         controller: _heightController,
@@ -686,6 +884,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         hint: 'Contoh: 160',
         icon: Icons.height,
         keyboardType: TextInputType.number,
+        onChanged: (_) => setState(() {}),
       ),
     ];
 
@@ -743,11 +942,23 @@ class _ProfileScreenState extends State<ProfileScreen>
           child: SizedBox(
             width: isWide ? null : double.infinity,
             child: ElevatedButton.icon(
-              onPressed: _saveProfile,
-              icon: const Icon(Icons.save),
-              label: const Text('Simpan Perubahan'),
+              onPressed: _isSavingProfile ? null : _saveProfileToDatabase,
+              icon: _isSavingProfile
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.save),
+              label: Text(
+                _isSavingProfile ? 'Menyimpan...' : 'Simpan Perubahan',
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryGreen,
+                disabledBackgroundColor: primaryGreen.withOpacity(0.5),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -773,6 +984,17 @@ class _ProfileScreenState extends State<ProfileScreen>
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 14),
+
+        _inputField(
+          controller: _currentPasswordController,
+          label: 'Password Lama',
+          hint: 'Masukkan password saat ini',
+          icon: Icons.lock_clock_outlined,
+          obscureText: true,
+        ),
+
+        const SizedBox(height: 14),
+
         if (isWide)
           Row(
             children: [
@@ -818,16 +1040,19 @@ class _ProfileScreenState extends State<ProfileScreen>
         SizedBox(
           width: isWide ? null : double.infinity,
           child: ElevatedButton(
-            onPressed: () => _showComingSoon('Password berhasil diperbarui'),
+            onPressed: _isUpdatingPassword ? null : _updatePasswordToDatabase,
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryGreen,
+              disabledBackgroundColor: primaryGreen.withOpacity(0.5),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text('Update Password'),
+            child: Text(
+              _isUpdatingPassword ? 'Memperbarui...' : 'Update Password',
+            ),
           ),
         ),
         const SizedBox(height: 24),
@@ -868,7 +1093,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               width: isWide ? null : double.infinity,
               child: OutlinedButton(
                 onPressed: () =>
-                    _showComingSoon('Fitur hapus akun belum dibuat'),
+                    _showSnack('Fitur hapus akun belum dibuat', isError: true),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFF9B1C1C)),
                   padding: const EdgeInsets.symmetric(

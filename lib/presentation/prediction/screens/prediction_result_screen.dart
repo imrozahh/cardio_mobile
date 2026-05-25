@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../bloc/prediction_event.dart';
 import '../bloc/prediction_bloc.dart';
 import '../bloc/prediction_state.dart';
+import '../../auth/bloc/auth_bloc.dart';
 
 class PredictionResultScreen extends StatefulWidget {
   const PredictionResultScreen({super.key});
@@ -54,6 +55,13 @@ class _PredictionResultScreenState extends State<PredictionResultScreen> {
   Widget build(BuildContext context) {
     final Color primaryGreen = const Color(0xFF0AA06E);
 
+    final authState = context.watch<AuthBloc>().state;
+    String userName = "User";
+
+    if (authState is Authenticated) {
+      userName = authState.user.name;
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7FAFB),
 
@@ -75,7 +83,11 @@ class _PredictionResultScreenState extends State<PredictionResultScreen> {
             ),
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.account_circle_outlined),
+            tooltip: "Menu akun",
+            offset: const Offset(0, 44),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
             onSelected: (value) {
               if (value == 'profile') {
                 context.go('/profile');
@@ -88,25 +100,70 @@ class _PredictionResultScreenState extends State<PredictionResultScreen> {
                 value: 'profile',
                 child: Row(
                   children: [
-                    Icon(Icons.person_outline),
+                    Icon(Icons.person_outline, size: 20),
                     SizedBox(width: 10),
                     Text('Profil'),
                   ],
                 ),
               ),
+              PopupMenuDivider(),
               PopupMenuItem(
                 value: 'logout',
                 child: Row(
                   children: [
-                    Icon(Icons.logout),
+                    Icon(Icons.logout, size: 20, color: Colors.red),
                     SizedBox(width: 10),
-                    Text('Logout'),
+                    Text('Logout', style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),
             ],
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: 14,
+                    backgroundColor: primaryGreen.withOpacity(0.1),
+                    child: Text(
+                      userName.isNotEmpty ? userName[0].toUpperCase() : "U",
+                      style: TextStyle(
+                        color: primaryGreen,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 86),
+                    child: Text(
+                      userName,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 18,
+                    color: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(width: 8),
         ],
       ),
 
