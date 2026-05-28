@@ -12,6 +12,7 @@ import '../../presentation/history/screens/history_screen.dart';
 import '../../presentation/articles/screens/articles_screen.dart';
 import '../../presentation/articles/screens/article_detail_screen.dart';
 import '../../presentation/profile/screens/profile_screen.dart';
+import '../../presentation/chat/screens/chat_screen.dart';
 
 class AppRoutes {
   AppRoutes._();
@@ -30,6 +31,7 @@ class AppRoutes {
   static const String articles = '/articles';
   static const String articleDetail = '/articles/:id';
   static const String profile = '/profile';
+  static const String chat = '/chat';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -98,6 +100,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.profile,
       name: 'profile',
       builder: (context, state) => const ProfileScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.chat,
+      name: 'chat',
+      builder: (context, state) => const ChatScreen(),
     ),
   ],
   errorBuilder: (context, state) => Scaffold(

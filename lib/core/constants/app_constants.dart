@@ -2,8 +2,11 @@ class AppConstants {
   AppConstants._();
 
   // ── API ──────────────────────────────────────────────────────────────────
-  static const String baseUrl = 'http://localhost:8000/api';
-  // static const String baseUrl = 'http://localhost:8000/api'; // iOS simulator
+  // Jika run di Android Emulator, gunakan 10.0.2.2
+  // Jika run di Flutter Web / Chrome, gunakan 127.0.0.1 atau localhost
+  // Jika run di HP fisik (satu WiFi), gunakan IP komputer Anda (misal: 192.168.x.x)
+  static const String baseUrl = 'http://127.0.0.1:8000/api';
+  static const String emulatorUrl = 'http://10.0.2.2:8000/api'; 
   // static const String baseUrl = 'https://your-domain.com/api'; // Production
 
   static const int connectTimeout = 30000; // ms

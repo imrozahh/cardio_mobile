@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../core/constants/app_constants.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -126,11 +127,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }),
 
             drawerItem(Icons.chat_bubble_outline, "Konsultasi AI", () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Halaman Konsultasi AI belum dibuat"),
-                ),
-              );
+              context.push('/chat');
             }),
 
             drawerItem(Icons.person_outline, "Profil", () {
@@ -1104,9 +1101,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
 
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Mulai konsultasi baru')),
-                );
+                context.push('/chat');
               },
 
               child: const Text(

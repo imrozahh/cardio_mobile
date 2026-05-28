@@ -27,4 +27,8 @@ class ApiEndpoints {
 
   // ── Dashboard ────────────────────────────────────────────────────────────
   static const String dashboardStats = '/dashboard/stats';
+
+  // ── AI Consultation ──────────────────────────────────────────────────────
+  static const String chats = '/chats';
+  static const String sendChat = '/chat';
 }
