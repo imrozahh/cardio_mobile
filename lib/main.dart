@@ -5,6 +5,7 @@ import 'injection_container.dart' as di;
 import 'core/router/app_router.dart';
 import 'presentation/auth/bloc/auth_bloc.dart';
 import 'presentation/chat/bloc/chat_bloc.dart';
+import 'presentation/prediction/bloc/prediction_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<ChatBloc>(
           create: (_) => di.sl<ChatBloc>(),
         ),
+        BlocProvider<PredictionBloc>(create: (_) => di.sl<PredictionBloc>()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

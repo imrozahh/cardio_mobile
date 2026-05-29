@@ -13,13 +13,35 @@ class PredictionModel extends PredictionEntity {
 
   factory PredictionModel.fromJson(Map<String, dynamic> json) {
     return PredictionModel(
-      id: json['id'].toString(),
-      userId: json['user_id'].toString(),
-      inputData: json['input_data'] as Map<String, dynamic>,
-      riskScore: (json['risk_score'] as num).toDouble(),
-      riskLevel: json['risk_level'],
-      recommendation: json['recommendation'] ?? '',
-      createdAt: DateTime.parse(json['created_at']),
+      id: json['id']?.toString() ?? '',
+      userId: json['user_id']?.toString() ?? '',
+
+      inputData: json['input_data'] is Map
+          ? Map<String, dynamic>.from(json['input_data'])
+          : <String, dynamic>{},
+
+      // Untuk POST /predict: risk_score
+      // Untuk GET /predictions: result_score
+      riskScore:
+          (json['risk_score'] as num?)?.toDouble() ??
+          (json['result_score'] as num?)?.toDouble() ??
+          0.0,
+
+      // Untuk POST /predict: risk_level
+      // Untuk GET /predictions: result_level
+      riskLevel:
+          json['risk_level']?.toString() ??
+          json['result_level']?.toString() ??
+          '',
+
+      recommendation:
+          json['recommendation']?.toString() ??
+          json['recommendations']?.toString() ??
+          '',
+
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'].toString())
+          : DateTime.now(),
     );
   }
 

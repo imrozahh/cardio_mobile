@@ -12,8 +12,8 @@ class ApiEndpoints {
   static const String resetPassword = '/reset-password';
 
   // ── Prediction ───────────────────────────────────────────────────────────
-  static const String predict = '/predictions';
-  static const String predictionHistory = '/predictions/history';
+  static const String predict = '/predict';
+  static const String predictionHistory = '/predictions';
   static String predictionDetail(String id) => '/predictions/$id';
 
   // ── Articles ─────────────────────────────────────────────────────────────

@@ -4,7 +4,7 @@ class PredictionEntity {
   final String userId;
   final Map<String, dynamic> inputData;
   final double riskScore;
-  final String riskLevel; // 'low', 'medium', 'high'
+  final String riskLevel; // 'RENDAH', 'SEDANG', 'TINGGI'
   final String recommendation;
   final DateTime createdAt;
 
@@ -18,9 +18,16 @@ class PredictionEntity {
     required this.createdAt,
   });
 
-  bool get isHighRisk => riskLevel == 'high';
-  bool get isMediumRisk => riskLevel == 'medium';
-  bool get isLowRisk => riskLevel == 'low';
+  String get normalizedRiskLevel => riskLevel.toUpperCase();
 
-  String get riskPercentage => '${(riskScore * 100).toStringAsFixed(1)}%';
+  bool get isHighRisk =>
+      normalizedRiskLevel == 'TINGGI' || normalizedRiskLevel == 'HIGH';
+
+  bool get isMediumRisk =>
+      normalizedRiskLevel == 'SEDANG' || normalizedRiskLevel == 'MEDIUM';
+
+  bool get isLowRisk =>
+      normalizedRiskLevel == 'RENDAH' || normalizedRiskLevel == 'LOW';
+
+  String get riskPercentage => '${riskScore.toStringAsFixed(1)}%';
 }
