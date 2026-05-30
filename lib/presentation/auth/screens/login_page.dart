@@ -53,7 +53,22 @@ class _LoginPageState extends State<LoginPage> {
             SnackBar(content: Text(state.message), backgroundColor: Colors.red),
           );
         } else if (state is Authenticated) {
-          context.go(AppRoutes.dashboard);
+          // Hanya role user yang boleh login
+          if (state.user.role.contains('user')) {
+            context.go(AppRoutes.dashboard);
+          } else {
+            // Logout otomatis jika bukan user
+            context.read<AuthBloc>().add(LogoutRequested());
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  "Hanya akun user yang dapat login ke aplikasi mobile",
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         }
       },
       child: Scaffold(
