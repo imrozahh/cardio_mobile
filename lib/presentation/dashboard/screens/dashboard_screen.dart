@@ -194,12 +194,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
   }
 
-  void _showConsultationSnack() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Halaman Konsultasi AI belum dibuat")),
-    );
-  }
-
   void _onBottomNavTap(int index) {
     setState(() {
       currentIndex = index;
@@ -219,7 +213,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         context.go('/history');
         break;
       case 4:
-        _showConsultationSnack();
+        context.go('/chat');
         break;
     }
   }
@@ -637,9 +631,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final highCount = histories
             .where((e) => _riskLevel(e).toUpperCase() == 'TINGGI')
             .length;
-        final mediumCount = histories
-            .where((e) => _riskLevel(e).toUpperCase() == 'SEDANG')
-            .length;
         final lowCount = histories
             .where((e) => _riskLevel(e).toUpperCase() == 'RENDAH')
             .length;
@@ -748,7 +739,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         latest: latest,
                         previous: previous,
                         highCount: highCount,
-                        mediumCount: mediumCount,
                         lowCount: lowCount,
                         total: histories.length,
                       ),
@@ -769,7 +759,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   latest: latest,
                   previous: previous,
                   highCount: highCount,
-                  mediumCount: mediumCount,
                   lowCount: lowCount,
                   total: histories.length,
                 ),
@@ -885,7 +874,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required dynamic latest,
     required dynamic previous,
     required int highCount,
-    required int mediumCount,
     required int lowCount,
     required int total,
   }) {
@@ -947,7 +935,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 spacing: 10,
                 children: [
                   radarSummaryItem("Tinggi", "$highCount data"),
-                  radarSummaryItem("Sedang", "$mediumCount data"),
                   radarSummaryItem("Rendah", "$lowCount data"),
                   radarSummaryItem(
                     "Rata-rata",
@@ -1157,7 +1144,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String _formatRiskLevel(String value) {
     final level = value.toUpperCase();
     if (level == 'HIGH') return 'TINGGI';
-    if (level == 'MEDIUM') return 'SEDANG';
     if (level == 'LOW') return 'RENDAH';
     if (level.isEmpty) return '-';
     return level[0] + level.substring(1).toLowerCase();
@@ -1515,11 +1501,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               onPressed: () {
-<<<<<<< HEAD
                 context.push('/chat');
-=======
-                _showConsultationSnack();
->>>>>>> b5a1431ad43e3ab9e280492030becd06f3de4648
               },
               child: const Text(
                 "+ Mulai Konsultasi Baru",
@@ -1530,6 +1512,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
     );
+  }
+
+  // DRAWER ITEM
+  static Widget drawerItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
   }
 }
 

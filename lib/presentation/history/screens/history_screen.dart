@@ -627,18 +627,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     final bool high =
         risk.toUpperCase() == 'TINGGI' || risk.toUpperCase() == 'HIGH';
-    final bool medium =
-        risk.toUpperCase() == 'SEDANG' || risk.toUpperCase() == 'MEDIUM';
-    final statusColor = high
-        ? const Color(0xFFEF4444)
-        : medium
-        ? const Color(0xFFF59E0B)
-        : primaryGreen;
+    final statusColor = high ? const Color(0xFFEF4444) : primaryGreen;
 
     final statusText = high
         ? 'Perlu Perhatian Medis'
-        : medium
-        ? 'Risiko Sedang'
         : 'Kondisi Terpantau Baik';
 
     return InkWell(
@@ -887,10 +879,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     if (risk == 'TINGGI' || risk == 'HIGH') {
       return 78;
-    }
-
-    if (risk == 'SEDANG' || risk == 'MEDIUM') {
-      return 55;
     }
 
     return 26;

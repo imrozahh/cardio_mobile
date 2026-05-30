@@ -371,13 +371,6 @@ class _PredictionResultScreenState extends State<PredictionResultScreen> {
       subtitle = pred.recommendation.isNotEmpty
           ? pred.recommendation
           : 'Berdasarkan data kesehatan Anda, risiko penyakit jantung tergolong tinggi.';
-    } else if (riskLevel == 'SEDANG' || riskLevel == 'MEDIUM') {
-      bgStart = const Color(0xFFF97316);
-      bgEnd = const Color(0xFFF59E0B);
-      title = 'Risiko Sedang';
-      subtitle = pred.recommendation.isNotEmpty
-          ? pred.recommendation
-          : 'Berdasarkan data kesehatan Anda, risiko penyakit jantung tergolong sedang.';
     }
 
     return Container(

@@ -274,9 +274,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
         context.go('/history');
         break;
       case 4:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Halaman Konsultasi AI belum dibuat')),
-        );
+        context.go('/chat');
         break;
     }
   }

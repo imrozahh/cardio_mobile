@@ -57,28 +57,30 @@ class _ChatScreenState extends State<ChatScreen> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isDesktop = constraints.maxWidth > 900;
-          
+
           if (isDesktop) {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Left Sidebar
-                SizedBox(
-                  width: 250,
-                  child: _buildLeftSidebar(context),
+                SizedBox(width: 250, child: _buildLeftSidebar(context)),
+                VerticalDivider(
+                  width: 1,
+                  thickness: 1,
+                  color: Colors.grey.shade200,
                 ),
-                VerticalDivider(width: 1, thickness: 1, color: Colors.grey.shade200),
                 // Center Chat Area
                 Expanded(
                   flex: 5,
                   child: _buildCenterChat(context, isDesktop: true),
                 ),
-                VerticalDivider(width: 1, thickness: 1, color: Colors.grey.shade200),
-                // Right Info Sidebar
-                SizedBox(
-                  width: 320,
-                  child: _buildRightSidebar(context),
+                VerticalDivider(
+                  width: 1,
+                  thickness: 1,
+                  color: Colors.grey.shade200,
                 ),
+                // Right Info Sidebar
+                SizedBox(width: 320, child: _buildRightSidebar(context)),
               ],
             );
           } else {
@@ -106,7 +108,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: primaryGreen,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.favorite, color: Colors.white, size: 20),
+                  child: const Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Column(
@@ -114,30 +120,65 @@ class _ChatScreenState extends State<ChatScreen> {
                   children: [
                     const Text(
                       'HeartCare',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textDark),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: textDark,
+                      ),
                     ),
                     Text(
                       'Smart heart monitoring',
-                      style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey.shade500,
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          
+
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 8.0,
+            ),
             child: Text(
               'PATIENT WORKSPACE',
-              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey.shade400, letterSpacing: 1.2),
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey.shade400,
+                letterSpacing: 1.2,
+              ),
             ),
           ),
-          
-          _navItem(Icons.dashboard_outlined, "Dashboard", false, () => context.go('/dashboard')),
-          _navItem(Icons.monitor_heart_outlined, "Cek Kesehatan", false, () => context.push('/prediction')),
-          _navItem(Icons.favorite_border, "Hasil Terakhir", false, () => context.push('/prediction-result')),
-          _navItem(Icons.history, "Riwayat Prediksi", false, () => context.push('/history')),
+
+          _navItem(
+            Icons.dashboard_outlined,
+            "Dashboard",
+            false,
+            () => context.go('/dashboard'),
+          ),
+          _navItem(
+            Icons.monitor_heart_outlined,
+            "Cek Kesehatan",
+            false,
+            () => context.push('/prediction'),
+          ),
+          _navItem(
+            Icons.favorite_border,
+            "Hasil Terakhir",
+            false,
+            () => context.push('/prediction-result'),
+          ),
+          _navItem(
+            Icons.history,
+            "Riwayat Prediksi",
+            false,
+            () => context.push('/history'),
+          ),
           _navItem(Icons.chat_bubble_outline, "Konsultasi AI", true, () {}),
           _navItem(Icons.person_outline, "Profil", false, () {}),
         ],
@@ -145,14 +186,21 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _navItem(IconData icon, String title, bool isSelected, VoidCallback onTap) {
+  Widget _navItem(
+    IconData icon,
+    String title,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? primaryGreen.withOpacity(0.08) : Colors.transparent,
+          color: isSelected
+              ? primaryGreen.withOpacity(0.08)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -195,7 +243,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   Text(
                     userName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: textDark),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: textDark,
+                    ),
                   ),
                   const Text(
                     'PATIENT ID: 4HF-2026',
@@ -209,15 +261,19 @@ class _ChatScreenState extends State<ChatScreen> {
                 backgroundColor: primaryGreen.withOpacity(0.2),
                 child: Text(
                   userName.isNotEmpty ? userName[0].toUpperCase() : 'U',
-                  style: const TextStyle(color: primaryGreen, fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(
+                    color: primaryGreen,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                 ),
               ),
               const Icon(Icons.keyboard_arrow_down, color: textMuted, size: 20),
             ],
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Green AI Card
           Container(
             padding: const EdgeInsets.all(20),
@@ -235,16 +291,28 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.smart_toy_outlined, color: Colors.white, size: 28),
+                const Icon(
+                  Icons.smart_toy_outlined,
+                  color: Colors.white,
+                  size: 28,
+                ),
                 const SizedBox(height: 16),
                 const Text(
                   'HeartCare AI',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Asisten digital untuk membantu Anda memahami pertanyaan umum seputar kesehatan jantung kapan saja.',
-                  style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 12, height: 1.5),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 12,
+                    height: 1.5,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -252,35 +320,50 @@ class _ChatScreenState extends State<ChatScreen> {
                     Container(
                       width: 6,
                       height: 6,
-                      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     const Text(
                       'AI SIAP MEMBANTU',
-                      style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           Text(
             'REKOMENDASI PERTANYAAN',
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey.shade400, letterSpacing: 1.2),
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade400,
+              letterSpacing: 1.2,
+            ),
           ),
           const SizedBox(height: 16),
-          
-          _bulletPoint('Apa saja gejala penyakit jantung yang harus saya waspadai?'),
+
+          _bulletPoint(
+            'Apa saja gejala penyakit jantung yang harus saya waspadai?',
+          ),
           _bulletPoint('Bagaimana cara menurunkan kolesterol secara alami?'),
           _bulletPoint('Makanan apa yang baik untuk kesehatan jantung?'),
           _bulletPoint('Berapa kali saya harus berolahraga dalam seminggu?'),
           _bulletPoint('Bagaimana cara membaca hasil tensi?'),
-          
+
           const Spacer(),
-          
+
           // Bottom Info Card
           Container(
             padding: const EdgeInsets.all(16),
@@ -294,18 +377,30 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.lightbulb_outline, color: Colors.blue.shade400, size: 20),
+                    Icon(
+                      Icons.lightbulb_outline,
+                      color: Colors.blue.shade400,
+                      size: 20,
+                    ),
                     const SizedBox(width: 8),
                     const Text(
                       'Tips Kardiovaskular',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF0369A1)),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: Color(0xFF0369A1),
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 const Text(
                   'Membatasi asupan garam hingga kurang dari 5 gram per hari dapat membantu menurunkan tekanan darah secara signifikan.',
-                  style: TextStyle(fontSize: 11, color: Color(0xFF0C4A6E), height: 1.5),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF0C4A6E),
+                    height: 1.5,
+                  ),
                 ),
               ],
             ),
@@ -320,7 +415,7 @@ class _ChatScreenState extends State<ChatScreen> {
       onTap: () {
         // Option 1: Send directly
         // _sendMessage(text);
-        
+
         // Option 2 (Better UX): Fill the text field so the user can read/edit it before sending
         _messageController.text = text;
         _messageController.selection = TextSelection.fromPosition(
@@ -337,12 +432,19 @@ class _ChatScreenState extends State<ChatScreen> {
               margin: const EdgeInsets.only(top: 6, right: 12),
               width: 6,
               height: 6,
-              decoration: const BoxDecoration(color: primaryGreen, shape: BoxShape.circle),
+              decoration: const BoxDecoration(
+                color: primaryGreen,
+                shape: BoxShape.circle,
+              ),
             ),
             Expanded(
               child: Text(
                 text,
-                style: const TextStyle(fontSize: 12, color: textDark, height: 1.4),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: textDark,
+                  height: 1.4,
+                ),
               ),
             ),
           ],
@@ -365,7 +467,7 @@ class _ChatScreenState extends State<ChatScreen> {
               if (!isDesktop)
                 IconButton(
                   icon: const Icon(Icons.arrow_back),
-                  onPressed: () => context.pop(),
+                  onPressed: () => context.go('/dashboard'),
                 ),
               Container(
                 padding: const EdgeInsets.all(8),
@@ -373,7 +475,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   color: primaryGreen,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.chat_bubble_outline, color: Colors.white, size: 20),
+                child: const Icon(
+                  Icons.chat_bubble_outline,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 16),
               Column(
@@ -381,19 +487,31 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   const Text(
                     'Konsultasi AI',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textDark),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: textDark,
+                    ),
                   ),
                   Row(
                     children: [
                       Container(
                         width: 6,
                         height: 6,
-                        decoration: const BoxDecoration(color: primaryGreen, shape: BoxShape.circle),
+                        decoration: const BoxDecoration(
+                          color: primaryGreen,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                       const SizedBox(width: 6),
                       const Text(
                         'ACTIVE ASSISTANT',
-                        style: TextStyle(fontSize: 10, color: primaryGreen, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: primaryGreen,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ],
                   ),
@@ -405,22 +523,33 @@ class _ChatScreenState extends State<ChatScreen> {
                   context.read<ChatBloc>().add(LoadChatHistory());
                 },
                 icon: const Icon(Icons.add, size: 16, color: textDark),
-                label: const Text('Chat Baru', style: TextStyle(color: textDark)),
+                label: const Text(
+                  'Chat Baru',
+                  style: TextStyle(color: textDark),
+                ),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: Colors.grey.shade300),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        
+
         BlocListener<ChatBloc, ChatState>(
           listener: (context, state) {
             if (state is ChatError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
               );
             }
           },
@@ -446,13 +575,18 @@ class _ChatScreenState extends State<ChatScreen> {
                 return ListView.builder(
                   controller: _scrollController,
                   reverse: true, // Start from bottom
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 24,
+                  ),
                   itemCount: history.length + (isLoading ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (isLoading && index == 0) {
                       return const Padding(
                         padding: EdgeInsets.symmetric(vertical: 24.0),
-                        child: Center(child: CircularProgressIndicator(color: primaryGreen)),
+                        child: Center(
+                          child: CircularProgressIndicator(color: primaryGreen),
+                        ),
                       );
                     }
 
@@ -463,10 +597,18 @@ class _ChatScreenState extends State<ChatScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // User Bubble
-                        _buildMessageBubble(text: chat.message, isUser: true, time: chat.createdAt),
+                        _buildMessageBubble(
+                          text: chat.message,
+                          isUser: true,
+                          time: chat.createdAt,
+                        ),
                         const SizedBox(height: 16),
                         // AI Bubble
-                        _buildMessageBubble(text: chat.response, isUser: false, time: chat.createdAt),
+                        _buildMessageBubble(
+                          text: chat.response,
+                          isUser: false,
+                          time: chat.createdAt,
+                        ),
                         const SizedBox(height: 32),
                       ],
                     );
@@ -476,7 +618,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
         ),
-        
+
         // Input Area
         _buildInputArea(),
       ],
@@ -495,7 +637,10 @@ class _ChatScreenState extends State<ChatScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: primaryGreen.withOpacity(0.1), width: 2),
+                border: Border.all(
+                  color: primaryGreen.withOpacity(0.1),
+                  width: 2,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: primaryGreen.withOpacity(0.15),
@@ -505,12 +650,20 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ],
               ),
-              child: const Icon(Icons.smart_toy_outlined, size: 52, color: primaryGreen),
+              child: const Icon(
+                Icons.smart_toy_outlined,
+                size: 52,
+                color: primaryGreen,
+              ),
             ),
             const SizedBox(height: 32),
             const Text(
               'Ada yang bisa dibantu?',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textDark),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: textDark,
+              ),
             ),
             const SizedBox(height: 12),
             const Text(
@@ -519,17 +672,29 @@ class _ChatScreenState extends State<ChatScreen> {
               style: TextStyle(color: textMuted, height: 1.6, fontSize: 13),
             ),
             const SizedBox(height: 48),
-            
+
             // Suggestion Chips
             Wrap(
               spacing: 16,
               runSpacing: 16,
               alignment: WrapAlignment.center,
               children: [
-                _suggestionChip('Apa saja gejala penyakit jantung yang', 'Apa saja gejala penyakit jantung yang harus saya waspadai?'),
-                _suggestionChip('Bagaimana cara menurunkan kolester', 'Bagaimana cara menurunkan kolesterol secara alami?'),
-                _suggestionChip('Makanan apa yang baik untuk kesehat', 'Makanan apa yang baik untuk kesehatan jantung?'),
-                _suggestionChip('Berapa kali saya harus berolahraga da', 'Berapa kali saya harus berolahraga dalam seminggu?'),
+                _suggestionChip(
+                  'Apa saja gejala penyakit jantung yang',
+                  'Apa saja gejala penyakit jantung yang harus saya waspadai?',
+                ),
+                _suggestionChip(
+                  'Bagaimana cara menurunkan kolester',
+                  'Bagaimana cara menurunkan kolesterol secara alami?',
+                ),
+                _suggestionChip(
+                  'Makanan apa yang baik untuk kesehat',
+                  'Makanan apa yang baik untuk kesehatan jantung?',
+                ),
+                _suggestionChip(
+                  'Berapa kali saya harus berolahraga da',
+                  'Berapa kali saya harus berolahraga dalam seminggu?',
+                ),
               ],
             ),
           ],
@@ -559,17 +724,25 @@ class _ChatScreenState extends State<ChatScreen> {
               color: Colors.black.withOpacity(0.02),
               blurRadius: 10,
               offset: const Offset(0, 4),
-            )
-          ]
+            ),
+          ],
         ),
         child: Row(
           children: [
-            const Icon(Icons.chat_bubble_outline, size: 18, color: primaryGreen),
+            const Icon(
+              Icons.chat_bubble_outline,
+              size: 18,
+              color: primaryGreen,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(fontSize: 13, color: textDark, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: textDark,
+                  fontWeight: FontWeight.w600,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -580,7 +753,11 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildMessageBubble({required String text, required bool isUser, required DateTime time}) {
+  Widget _buildMessageBubble({
+    required String text,
+    required bool isUser,
+    required DateTime time,
+  }) {
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Row(
@@ -595,7 +772,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: primaryGreen.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.smart_toy_outlined, color: primaryGreen, size: 20),
+              child: const Icon(
+                Icons.smart_toy_outlined,
+                color: primaryGreen,
+                size: 20,
+              ),
             ),
           ],
           Flexible(
@@ -613,7 +794,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
               child: Column(
-                crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                crossAxisAlignment: isUser
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
                 children: [
                   Text(
                     text,
@@ -640,9 +823,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: primaryGreen.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.person_outline, color: primaryGreen, size: 20),
+              child: const Icon(
+                Icons.person_outline,
+                color: primaryGreen,
+                size: 20,
+              ),
             ),
-          ]
+          ],
         ],
       ),
     );
@@ -668,7 +855,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       hintText: 'Tanyakan kesehatan jantung Anda...',
                       hintStyle: TextStyle(color: textMuted, fontSize: 14),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
                     ),
                     textInputAction: TextInputAction.send,
                     onSubmitted: (_) => _sendMessage(),
@@ -692,7 +882,12 @@ class _ChatScreenState extends State<ChatScreen> {
           const SizedBox(height: 16),
           const Text(
             'AI DAPAT MEMBERIKAN HASIL YANG KURANG AKURAT. SELALU KONSULTASIKAN DENGAN DOKTER.',
-            style: TextStyle(fontSize: 9, color: Colors.grey, letterSpacing: 1, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 9,
+              color: Colors.grey,
+              letterSpacing: 1,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
