@@ -384,7 +384,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         context.go('/history');
         break;
       case 4:
-        _showSnack('Halaman Konsultasi AI belum dibuat');
+        context.go('/chat');
         break;
     }
   }
