@@ -12,7 +12,6 @@ HeartCare Mobile merupakan aplikasi berbasis Flutter yang digunakan untuk memban
 * Histori Prediksi
 * Detail Hasil Prediksi
 * Konsultasi AI
-* Artikel Kesehatan
 * Role Authentication User
 
 ---
