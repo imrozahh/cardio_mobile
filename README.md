@@ -1,24 +1,25 @@
 # HeartCare Mobile
 
-HeartCare Mobile merupakan aplikasi berbasis Flutter untuk membantu deteksi dini risiko penyakit cardiovascular menggunakan machine learning Random Forest. Sistem terintegrasi dengan backend Laravel, MongoDB, dan Flask API.
+HeartCare Mobile merupakan aplikasi berbasis Flutter yang digunakan untuk membantu deteksi dini risiko penyakit cardiovascular menggunakan metode Random Forest. Sistem terintegrasi dengan backend Laravel, database MongoDB, dan Flask API sebagai layanan machine learning.
 
 ---
 
-## Features
+# Features
 
 * Login & Register
-* Dashboard Kesehatan
+* Dashboard Monitoring Kesehatan
 * Prediksi Risiko Penyakit Jantung
 * Histori Prediksi
 * Detail Hasil Prediksi
 * Konsultasi AI
 * Artikel Kesehatan
+* Role Authentication User
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-### Mobile
+## Mobile
 
 * Flutter
 * Dart
@@ -26,13 +27,13 @@ HeartCare Mobile merupakan aplikasi berbasis Flutter untuk membantu deteksi dini
 * GoRouter
 * Dio
 
-### Backend
+## Backend
 
 * Laravel
 * PHP
 * MongoDB
 
-### Machine Learning
+## Machine Learning
 
 * Python
 * Flask
@@ -41,82 +42,120 @@ HeartCare Mobile merupakan aplikasi berbasis Flutter untuk membantu deteksi dini
 
 ---
 
-## Installation
+# Related Repository
 
-### Clone Repository
+Backend Laravel dan Frontend Web berada pada repository terpisah:
 
-```bash id="n3g63r"
+* Mobile Flutter
+  https://github.com/imrozahh/cardio_mobile
+
+* Backend Laravel & Web
+  https://github.com/2ndliandra/HeartCare
+
+---
+
+# Installation
+
+## Clone Repository
+
+```bash
 git clone https://github.com/imrozahh/cardio_mobile.git
 ```
 
 Masuk ke folder project:
 
-```bash id="kzq3k1"
+```bash
 cd cardio_mobile/mobile_fe
 ```
 
 ---
 
-## Install Dependencies
+# Install Dependencies
 
-```bash id="0fwc0s"
+```bash
 flutter pub get
 ```
 
 ---
 
-## Run Application
+# Run Application
 
-### Chrome/Web
+## Chrome/Web
 
-```bash id="1jy0ti"
+```bash
 flutter run -d chrome
 ```
 
-### Android Emulator
+## Android Emulator
 
-```bash id="uqm75d"
+```bash
 flutter run
 ```
 
 ---
 
-## Backend Setup
+# Backend Setup
 
-Jalankan Laravel:
+Pastikan backend Laravel sudah dijalankan dari repository backend:
 
-```bash id="fd4w80"
+```bash
 php artisan serve
 ```
 
 ---
 
-## Flask API
+# MongoDB Setup
+
+Pastikan MongoDB berjalan pada:
+
+```bash
+mongodb://127.0.0.1:27017
+```
+
+Database yang digunakan:
+
+```bash
+belajar_mongo
+```
+
+Collection utama yang digunakan:
+
+* users
+* predictions
+* chats
+* articles
+* categories
+* roles
+* permissions
+
+---
+
+# Flask API Setup
 
 Masuk ke folder Flask:
 
-```bash id="q5m6l7"
+```bash
 cd flask_ml
 ```
 
 Install dependency:
 
-```bash id="8s5x0o"
+```bash
 pip install -r requirements.txt
 ```
 
-Jalankan Flask:
+Jalankan Flask API:
 
-```bash id="6j9k5u"
+```bash
 python app.py
 ```
 
 ---
 
-## Machine Learning Workflow
+# Machine Learning Workflow
 
 1. Collection Dataset
-2. EDA
+2. Exploratory Data Analysis (EDA)
 3. Data Cleaning
 4. Feature Engineering
 5. Data Split
@@ -129,13 +168,19 @@ python app.py
 
 ---
 
-## Database Collections
+# Model Evaluation
 
-* users
-* predictions
-* chats
-* articles
-* categories
+Evaluasi model dilakukan menggunakan:
+
+* Accuracy Score
+* ROC-AUC Score
+* Classification Report
+* Confusion Matrix
+
+Metode Random Forest dipilih karena mampu menghasilkan performa klasifikasi yang baik, mengurangi overfitting, serta dapat menangani banyak parameter kesehatan secara bersamaan.
 
 ---
 
+# License
+
+This project uses the MIT License.
